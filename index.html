@@ -19,8 +19,21 @@
         </div>
 
         <!-- Frete -->
-        <div class="bg-black text-brand text-[11px] md:text-xs py-3 text-center font-bold tracking-[0.2em] uppercase border-b border-white/5 relative z-50">
-            Frete Grátis Brasil • Compras acima de R$ 299
+        <div class="bg-black border-b border-white/5 relative z-50 overflow-hidden h-10 flex items-center">
+            <div class="flex whitespace-nowrap animate-marquee">
+                <div class="flex gap-12 px-6">
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                </div>
+                <div class="flex gap-12 px-6">
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                </div>
+            </div>
         </div>
 
         <!-- Header -->
@@ -49,9 +62,7 @@
 
                 <!-- Actions -->
                 <div class="flex items-center gap-4 text-white justify-self-end">
-                    <button aria-label="Menu"
-                            class="md:hidden p-2 hover:text-brand transition-colors"
-                            onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-white hover:text-brand transition">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
@@ -60,11 +71,19 @@
             </div>
             
             <!-- Mobile Menu (Dropdown) -->
-            <div id="mobile-menu" class="hidden md:hidden bg-dark-900 border-t border-white/10 absolute w-full left-0 shadow-2xl z-40">
-                <nav class="flex flex-col p-6 gap-6 text-lg font-bold text-gray-200">
-                    <a href="vestuario.html" onclick="transitionTo(event, this.href)" class="text-brand">Loja Virtual</a>
-                    <a href="#local" class="text-brand">Loja Física</a>
-                </nav>
+            <div id="mobile-menu" class="hidden lg:hidden absolute top-20 left-0 w-full bg-dark-900 border-b border-white/10 shadow-2xl z-30 animate-in fade-in slide-in-from-top-5 duration-300">
+                <div class="container mx-auto px-6 py-6 flex flex-col gap-4">
+                    
+                    <a href="vestuario.html " onclick="showSection('categories'); toggleMobileMenu()" 
+                    class="w-full bg-brand hover:bg-brand-hover text-black font-black uppercase italic tracking-tighter text-xl py-4 text-center rounded-sm transition-transform active:scale-95 flex items-center justify-center gap-2">
+                        Loja Virtual <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    </a>
+
+                    <a href="#local" class="w-full bg-transparent border border-white/20 hover:border-white text-white font-bold uppercase tracking-widest text-xs py-4 text-center rounded-sm transition-colors flex items-center justify-center gap-2">
+                        Loja Física <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    </a>
+
+                </div>
             </div>
         </header>
 
@@ -299,6 +318,10 @@
                     window.location.href = url;
                 }, 500);
             }
+            function toggleMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            }
         </script>
 
         <style>
@@ -328,6 +351,22 @@
             ::-webkit-scrollbar-track { background: #0a0a0a; }
             ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
             ::-webkit-scrollbar-thumb:hover { background: #FACC15; }
+            .animate-marquee {
+                animation: marquee 20s linear infinite;
+            }
+
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .animate-marquee:hover {
+                animation-play-state: paused;
+            }
         </style>
     </body>
 </html>

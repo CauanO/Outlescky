@@ -200,8 +200,7 @@
                                     Categoria</h2>
                                 <p class="text-gray-500 text-sm mt-2" id="product-count">Carregando...</p>
                             </div>
-                            <button
-                                class="lg:hidden w-full sm:w-auto bg-dark-800 border border-white/10 text-white px-4 py-3 rounded flex items-center justify-center gap-2 hover:bg-dark-700 transition">
+                            <button onclick="toggleMobileFilters()" class="lg:hidden w-full sm:w-auto bg-dark-800 border border-white/10 text-white px-4 py-3 rounded flex items-center justify-center gap-2 hover:bg-dark-700 transition">
                                 <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filtrar
                             </button>
                         </div>
@@ -347,6 +346,32 @@
             </div>
         </div>
 
+        <!-- Filtro em mobile -->
+        <div id="mobile-filter-sidebar" class="fixed inset-0 z-[60] hidden">
+            <div onclick="toggleMobileFilters()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="filter-overlay"></div>
+            
+            <div id="filter-panel" class="absolute top-0 left-0 h-full w-[85%] max-w-[350px] bg-dark-900 border-r border-white/10 shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col">
+                
+                <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                    <h2 class="text-white text-xl font-black italic uppercase tracking-tighter flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5 text-brand"></i> Filtros
+                    </h2>
+                    <button onclick="toggleMobileFilters()" class="text-gray-400 hover:text-white p-2">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <div id="mobile-filters-content" class="flex-1 overflow-y-auto p-6 space-y-8">
+                    </div>
+
+                <div class="p-6 bg-dark-800 border-t border-white/5">
+                    <button onclick="toggleMobileFilters()" class="w-full bg-brand hover:bg-brand-hover text-black font-black uppercase tracking-wider py-4 rounded-sm transition">
+                        Ver Resultados
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- JavaScript -->
         <script>
             tailwind.config = {
@@ -451,14 +476,16 @@
                 activeSizes: [],
                 maxPrice: 2000,
                 // Carrinho
-                cart: [], // Array para guardar os objetos do produto
+                cart: [],
                 isCartOpen: false,
                 // Detalhes e Carrossel
                 currentProductId: null,
-                detailSelectedSize: null, // Tamanho escolhido na página de detalhes
+                detailSelectedSize: null,
                 currentImageIndex: 0,
                 currentProductImages: []
             };
+
+            // --- VIEW NAVIGATION & MENUS ---
 
             function showSection(sectionId) {
                 state.currentView = sectionId === 'categories' ? 'categories' : state.currentView;
@@ -472,6 +499,40 @@
 
                 updateBreadcrumbs();
                 window.scrollTo(0, 0);
+
+                // Se estiver abrindo uma seção e o menu mobile estiver aberto, fecha ele
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            }
+
+            function toggleMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                if (menu) menu.classList.toggle('hidden');
+            }
+
+            // --- MOBILE FILTER SIDEBAR ---
+            function toggleMobileFilters() {
+                const sidebar = document.getElementById('mobile-filter-sidebar');
+                const overlay = document.getElementById('filter-overlay');
+                const panel = document.getElementById('filter-panel');
+                
+                if (sidebar.classList.contains('hidden')) {
+                    // Abrir
+                    sidebar.classList.remove('hidden');
+                    setTimeout(() => {
+                        overlay.classList.remove('opacity-0');
+                        panel.classList.remove('-translate-x-full');
+                    }, 10);
+                } else {
+                    // Fechar
+                    overlay.classList.add('opacity-0');
+                    panel.classList.add('-translate-x-full');
+                    setTimeout(() => {
+                        sidebar.classList.add('hidden');
+                    }, 300);
+                }
             }
 
             function updateBreadcrumbs(productName = '') {
@@ -513,56 +574,79 @@
                 showSection('grid');
             }
 
+            // Função Unificada para Renderizar Filtros (Desktop e Mobile)
             function renderFilters(category) {
-                const container = document.getElementById('filters-container');
                 const config = filtersConfig[category];
-                if (!config) { container.innerHTML = ''; return; }
+                let html = '';
+                
+                if (config) {
+                    // 1. Filtro Principal (Subcategorias)
+                    html += `<div><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">${config.title}</h4><ul class="space-y-3 text-sm text-gray-400">`;
+                    config.options.forEach(option => {
+                        const count = products.filter(p => p.category === category && p.subCategory === option).length;
+                        const isChecked = state.activeSubCategories.includes(option) ? 'checked' : '';
+                        html += `<li class="flex items-center gap-3 hover:text-white cursor-pointer group">
+                            <input type="checkbox" value="${option}" onchange="toggleSubCat('${option}')" ${isChecked} class="custom-checkbox w-4 h-4 rounded bg-transparent border-gray-600 checked:bg-brand transition cursor-pointer">
+                            <span class="group-hover:translate-x-1 transition-transform">${option} <span class="text-gray-600 text-xs">(${count})</span></span>
+                        </li>`;
+                    });
+                    html += `</ul></div>`;
 
-                let html = `<div><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">${config.title}</h4><ul class="space-y-3 text-sm text-gray-400">`;
-                config.options.forEach(option => {
-                    const count = products.filter(p => p.category === category && p.subCategory === option).length;
-                    html += `<li class="flex items-center gap-3 hover:text-white cursor-pointer group">
-                        <input type="checkbox" value="${option}" onchange="toggleSubCat('${option}')" class="custom-checkbox w-4 h-4 rounded bg-transparent border-gray-600 checked:bg-brand transition cursor-pointer">
-                        <span class="group-hover:translate-x-1 transition-transform">${option} <span class="text-gray-600 text-xs">(${count})</span></span>
-                    </li>`;
-                });
-                html += `</ul></div>`;
+                    // 2. Filtro de Tamanho
+                    html += `<div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tamanho</h4><div class="grid grid-cols-4 gap-2">`;
+                    config.sizes.forEach(size => {
+                        const isActive = state.activeSizes.includes(size);
+                        const activeClass = isActive ? 'bg-brand text-black border-brand' : 'border-white/20 text-gray-400 hover:border-brand hover:text-brand';
+                        html += `<button onclick="toggleSizeFilter('${size}', this)" class="h-8 border text-xs font-bold rounded-sm transition ${activeClass}">${size}</button>`;
+                    });
+                    html += `</div></div>`;
 
-                html += `<div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tamanho</h4><div class="grid grid-cols-4 gap-2">`;
-                config.sizes.forEach(size => {
-                    html += `<button onclick="toggleSizeFilter('${size}', this)" class="h-8 border border-white/20 text-gray-400 text-xs font-bold hover:border-brand hover:text-brand rounded-sm transition">${size}</button>`;
-                });
-                html += `</div></div>`;
+                    // 3. Filtro de Preço
+                    html += `<div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Preço Máximo</h4>
+                        <div class="flex justify-between text-xs text-gray-400 mb-2"><span>R$ 0</span><span class="price-val-display">R$ ${state.maxPrice}</span></div>
+                        <input type="range" min="0" max="2000" step="50" value="${state.maxPrice}" oninput="updatePrice(this.value)" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                    </div>`;
+                }
 
-                html += `<div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Preço Máximo</h4>
-                    <div class="flex justify-between text-xs text-gray-400 mb-2"><span>R$ 0</span><span id="price-val">R$ 2000</span></div>
-                    <input type="range" min="0" max="2000" step="50" value="2000" oninput="updatePrice(this.value)" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
-                </div>`;
-                container.innerHTML = html;
+                // Injeta no Container Desktop
+                const desktopContainer = document.getElementById('filters-container');
+                if (desktopContainer) desktopContainer.innerHTML = html;
+
+                // Injeta no Container Mobile
+                const mobileContainer = document.getElementById('mobile-filters-content');
+                if (mobileContainer) mobileContainer.innerHTML = html;
             }
 
             function toggleSubCat(val) {
                 if (state.activeSubCategories.includes(val)) state.activeSubCategories = state.activeSubCategories.filter(x => x !== val);
                 else state.activeSubCategories.push(val);
+                // Re-renderiza para atualizar os checkboxes nos dois lugares (desktop/mobile)
+                renderFilters(state.currentCategory);
                 filterAndRenderProducts();
             }
 
             function toggleSizeFilter(val, btn) {
                 if (state.activeSizes.includes(val)) {
                     state.activeSizes = state.activeSizes.filter(x => x !== val);
-                    btn.classList.remove('bg-brand', 'text-black', 'border-brand');
-                    btn.classList.add('text-gray-400', 'border-white/20');
                 } else {
                     state.activeSizes.push(val);
-                    btn.classList.remove('text-gray-400', 'border-white/20');
-                    btn.classList.add('bg-brand', 'text-black', 'border-brand');
                 }
+                // Re-renderiza para atualizar os botões nos dois lugares
+                renderFilters(state.currentCategory);
                 filterAndRenderProducts();
             }
 
             function updatePrice(val) {
                 state.maxPrice = parseInt(val);
-                document.getElementById('price-val').innerText = `R$ ${val}`;
+                
+                // Atualiza textos de preço (usando classe para pegar desktop e mobile)
+                const displays = document.querySelectorAll('.price-val-display');
+                displays.forEach(el => el.innerText = `R$ ${val}`);
+                
+                // Sincroniza os inputs range (desktop e mobile)
+                const inputs = document.querySelectorAll('input[type="range"]');
+                inputs.forEach(input => input.value = val);
+
                 filterAndRenderProducts();
             }
 
@@ -625,7 +709,7 @@
                 if (!product) return;
 
                 state.currentProductId = product.id;
-                state.detailSelectedSize = product.sizes[0]; // Seleciona o primeiro tamanho por padrão
+                state.detailSelectedSize = product.sizes[0]; 
                 state.currentView = 'details';
                 
                 showSection('details');
@@ -659,9 +743,7 @@
                 sizes.forEach(size => {
                     const btn = document.createElement('button');
                     const isSelected = state.detailSelectedSize === size;
-                    // Estilo base
                     let classes = "w-10 h-10 border text-sm font-bold transition flex items-center justify-center rounded-sm ";
-                    // Estilo condicional
                     if (isSelected) {
                         classes += "bg-brand text-black border-brand";
                     } else {
@@ -676,7 +758,6 @@
 
             function selectDetailSize(size) {
                 state.detailSelectedSize = size;
-                // Re-renderizar apenas os botões de tamanho para atualizar o visual
                 const product = products.find(p => p.id === state.currentProductId);
                 renderSizeSelector(product.sizes);
             }
@@ -714,22 +795,19 @@
                 updateDetailImageDisplay();
             }
 
-            // --- CART LOGIC (NOVA E FUNCIONAL) ---
-
+            // --- CART LOGIC ---
             function toggleCart() {
                 const sidebar = document.getElementById('cart-sidebar');
                 const overlay = document.getElementById('cart-overlay');
                 const panel = document.getElementById('cart-panel');
                 
                 if (sidebar.classList.contains('hidden')) {
-                    // Abrir
                     sidebar.classList.remove('hidden');
                     setTimeout(() => {
                         overlay.classList.remove('opacity-0');
                         panel.classList.remove('translate-x-full');
                     }, 10);
                 } else {
-                    // Fechar
                     overlay.classList.add('opacity-0');
                     panel.classList.add('translate-x-full');
                     setTimeout(() => {
@@ -742,9 +820,8 @@
                 const product = products.find(p => p.id === state.currentProductId);
                 if (!product) return;
 
-                // Adiciona ao array do carrinho
                 state.cart.push({
-                    cartId: Date.now(), // ID único para o item no carrinho (permite duplicatas com tamanhos diferentes)
+                    cartId: Date.now(),
                     productId: product.id,
                     name: product.name,
                     price: product.price,

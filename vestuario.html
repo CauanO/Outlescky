@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth bg-dark-900" style="background-color: #050505;">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shop | Outlescky</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    </head>
+    <body class="bg-dark-900 text-gray-100 bg-noise antialiased selection:bg-brand selection:text-black flex flex-col min-h-screen">
+        <!-- LOADER DE PÁGINA (ADICIONADO) -->
+        <div id="page-loader" class="fixed inset-0 z-[100] bg-dark-900 flex flex-col items-center justify-center transition-opacity duration-500">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-dark-800 border-t-brand mb-4"></div>
+            <span class="text-white text-xs font-bold uppercase tracking-widest animate-pulse">Carregando</span>
+        </div>
+
+        <!-- Frete -->
+        <div class="bg-black text-brand text-[11px] md:text-xs py-3 text-center font-bold tracking-[0.2em] uppercase border-b border-white/5 relative z-50">
+            Frete Grátis Brasil • Compras acima de R$ 299
+        </div>
+
+        <!-- Header -->
+        <header class="sticky top-0 z-40 bg-dark-900/95 backdrop-blur-lg border-b border-white/5 transition-all duration-300">
+            <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+                <!-- Logo -->
+                <a href="index.html" class="group flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-brand rounded-lg p-1">
+                    <span class="text-3xl font-black italic text-white">OUTLE<span class="text-brand">SCKY</span></span>
+                </a>
+
+                <!-- Nav -->
+                <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-400">
+                    <a href="#" onclick="showSection('categories')"
+                        class="hover:text-white transition-colors duration-200 py-2">Início</a>
+                    <a href="#" onclick="loadCategory('sets')" 
+                        class="hover:text-brand text-brand font-bold transition-colors duration-200 py-2">Conjuntos</a>  
+                    <a href="#" onclick="loadCategory('sneakers')"
+                        class="hover:text-white transition-colors duration-200 py-2">Tênis</a>
+                    <a href="#" onclick="loadCategory('shirts')"
+                        class="hover:text-white transition-colors duration-200 py-2">Camisas</a>
+                    <a href="#" onclick="loadCategory('pants')"
+                        class="hover:text-white transition-colors duration-200 py-2">Calças</a>
+                    <div class="relative group">
+                        <button class="hover:text-white transition-colors duration-200 py-2 flex items-center gap-1">Mais <i
+                                data-lucide="chevron-down" class="w-3 h-3"></i></button>
+                        <div
+                            class="absolute top-full left-0 w-40 bg-dark-800 border border-white/10 rounded-md shadow-xl py-2 hidden group-hover:block">
+                            <a href="#" onclick="loadCategory('shorts')"
+                                class="block px-4 py-2 hover:bg-white/5 hover:text-brand">Shorts</a>
+                            <a href="#" onclick="loadCategory('hats')"
+                                class="block px-4 py-2 hover:bg-white/5 hover:text-brand">Bonés</a>
+                            <a href="#" onclick="loadCategory('underwear')"
+                                class="block px-4 py-2 hover:bg-white/5 hover:text-brand">Cuecas</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Botão de pesquisa e carrinho -->
+                <div class="flex items-center gap-4 text-white">
+                    <button class="p-2 hover:text-brand transition-colors"><i data-lucide="search" class="w-5 h-5"></i></button>
+                    <button onclick="toggleCart()" class="p-2 hover:text-brand transition-colors relative group">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        <span id="cart-count" class="absolute top-1 right-0.5 bg-brand text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 transition-opacity">0</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Nav -->
+        <div class="bg-dark-800 border-b border-white/5 sticky top-20 z-30">
+            <div class="container mx-auto px-6 py-4 flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest font-bold">
+                <button onclick="showSection('categories')" class="hover:text-brand transition">Loja</button>
+                <span id="breadcrumb-separator-1" class="hidden">/</span>
+                <span id="breadcrumb-category" class="text-white hidden cursor-pointer hover:text-brand transition" onclick="backToGrid()">Category</span>
+                <span id="breadcrumb-separator-2" class="hidden">/</span>
+                <span id="breadcrumb-product" class="text-brand hidden truncate max-w-[150px]">Product</span>
+            </div>
+        </div>
+
+        <main class="flex-1 container mx-auto px-6 py-12">
+
+            <!-- SECTION 1: Categorias -->
+            <section id="categories-view" class="fade-in">
+                <h1 class="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white mb-2 text-center md:text-left">NAVEGUE POR <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-yellow-600 pr-2">ESTILO</span></h1>
+                <p class="text-gray-500 mb-10 text-center md:text-left text-sm">Explore nossas coleções separadas por categoria.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- CONJUNTOS (Imagem Atualizada) -->
+                    <div onclick="loadCategory('sets')" class="col-span-1 md:col-span-2 lg:col-span-2 group relative h-64 md:h-80 overflow-hidden rounded-lg cursor-pointer border border-brand/30 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.2)]">
+                        <img src="https://images.unsplash.com/photo-1588117305388-c2631a279f82?q=80&w=2000&auto=format&fit=crop" alt="Conjuntos" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-4xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition">Conjuntos Completos</h2>
+                            <p class="text-gray-200 text-sm font-medium mb-1">Kits com Camisa, Calça, Tênis e Acessórios</p>
+                            <p class="text-brand text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Kits <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+
+                    <!-- Tênis -->
+                    <div onclick="loadCategory('sneakers')" class="group relative h-64 md:h-80 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                        <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Tênis" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition">Tênis</h2>
+                            <p class="text-gray-300 text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Coleção <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+
+                    <!-- Camisas -->
+                    <div onclick="loadCategory('shirts')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Camisas" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition">Camisas</h2>
+                            <p class="text-gray-300 text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Coleção <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+
+                    <!-- Calças -->
+                    <div onclick="loadCategory('pants')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Calças" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition">Calças</h2>
+                            <p class="text-gray-300 text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Coleção <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+
+                    <!-- Shorts -->
+                    <div onclick="loadCategory('shorts')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                        <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Shorts" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition"> Shorts</h2>
+                            <p class="text-gray-300 text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Coleção <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+
+                    <!-- Bonés -->
+                    <div onclick="loadCategory('hats')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                        <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Bonés" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition">Bonés</h2>
+                            <p class="text-gray-300 text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Coleção <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+
+                    <!-- Cuecas -->
+                    <div onclick="loadCategory('underwear')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                        <img src="https://s2.glbimg.com/h6zCU9IDW87K_eRKCfsqdQNFp1Q=/smart/e.glbimg.com/og/ed/f/original/2019/02/18/david_beckham.jpg" alt="Cuecas" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100 filter grayscale hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
+                            <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
+                            <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mb-2 group-hover:text-brand transition">Cuecas</h2>
+                            <p class="text-gray-300 text-xs font-bold uppercase tracking-widest flex items-center gap-2">Ver Coleção <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: Produtos -->
+            <section id="grid-view" class="hidden fade-in">
+                <div class="flex flex-col lg:flex-row gap-12">
+
+                    <!-- Sidebar Dinâmica - Filtos -->
+                    <aside class="hidden lg:block w-64 flex-shrink-0 space-y-8">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                            <h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2">
+                                <i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand"></i> Filtros
+                            </h3>
+                            <button onclick="clearFilters()"
+                                class="text-[10px] text-gray-500 hover:text-white uppercase tracking-wider underline">Limpar</button>
+                        </div>
+
+                        <!-- Container Filtros -->
+                        <div id="filters-container" class="space-y-8">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </aside>
+
+                    <!-- Área Principal -->
+                    <div class="flex-1">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+                            <div>
+                                <h2 id="category-title"
+                                    class="text-4xl font-black uppercase italic text-white tracking-tighter leading-none">
+                                    Categoria</h2>
+                                <p class="text-gray-500 text-sm mt-2" id="product-count">Carregando...</p>
+                            </div>
+                            <button
+                                class="lg:hidden w-full sm:w-auto bg-dark-800 border border-white/10 text-white px-4 py-3 rounded flex items-center justify-center gap-2 hover:bg-dark-700 transition">
+                                <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filtrar
+                            </button>
+                        </div>
+
+                        <!-- Grid -->
+                        <div id="products-container"
+                            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8">
+                            <!-- Products -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="empty-state" class="hidden text-center py-20">
+                            <div class="bg-dark-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="search-x" class="w-8 h-8 text-gray-600"></i>
+                            </div>
+                            <h3 class="text-white font-bold text-lg mb-2">Nenhum produto encontrado</h3>
+                            <p class="text-gray-500 text-sm">Tente ajustar seus filtros.</p>
+                            <button onclick="clearFilters()"
+                                class="mt-4 text-brand text-sm font-bold hover:underline">Limpar filtros</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Datalhes dos produtos -->
+            <section id="details-view" class="hidden fade-in">
+                <!-- (Conteúdo idêntico ao anterior para detalhes) -->
+                <div class="bg-dark-800 rounded-lg overflow-hidden border border-white/5 shadow-2xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-2">
+                        <!-- Área da Imagem Atualizada com Carrossel -->
+                        <div class="bg-gray-100 relative h-[400px] lg:h-[600px] group overflow-hidden bg-gray-900">
+                            <!-- Imagem Principal -->
+                            <img id="detail-image" src="" alt="" class="w-full h-full object-cover transition-opacity duration-300">
+                            
+                            <!-- Badge Novo -->
+                            <span id="detail-badge" class="absolute top-6 left-6 bg-black text-white px-4 py-2 text-xs font-bold uppercase tracking-widest hidden shadow-lg z-20">Novo</span>
+                            
+                            <!-- Controles do Carrossel (Setas) - Inicialmente Ocultos -->
+                            <div id="carousel-controls" class="hidden">
+                                <button onclick="prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-brand hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-sm transition z-20">
+                                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                                </button>
+                                <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-brand hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-sm transition z-20">
+                                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                                </button>
+                                <!-- Contador -->
+                                <div class="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
+                                    <span id="image-counter" class="bg-black/70 text-white text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur">1 / 5</span>
+                                </div>
+                            </div>
+
+                            <!-- Etiqueta do Item (Nome da peça quando passa pro lado) -->
+                            <div id="item-label" class="absolute bottom-16 left-0 right-0 text-center pointer-events-none opacity-0 transition-opacity duration-300 z-10">
+                                <span class="bg-brand text-black font-bold uppercase text-xs px-3 py-1 rounded-sm shadow-lg">Detalhe do Item</span>
+                            </div>
+                        </div>
+                        <div class="p-8 lg:p-12 flex flex-col relative">
+                            <button onclick="backToGrid()"
+                                class="absolute top-8 left-8 lg:static lg:mb-8 text-gray-500 hover:text-brand flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-colors">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+                            </button>
+                            <div class="mt-8 lg:mt-0 mb-6 border-b border-white/5 pb-6">
+                                <h3 id="detail-brand" class="text-brand font-bold uppercase tracking-widest text-xs mb-2">
+                                    Marca</h3>
+                                <h1 id="detail-title"
+                                    class="text-3xl md:text-5xl font-black text-white italic leading-none mb-4 tracking-tighter">
+                                    NOME</h1>
+                                <div class="flex items-center gap-4">
+                                    <p id="detail-price" class="text-2xl text-gray-200 font-bold">R$ 000,00</p>
+                                    <span
+                                        class="bg-green-900/30 text-green-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide">Em
+                                        estoque</span>
+                                </div>
+                            </div>
+                            <div class="space-y-6 flex-1">
+                                <p id="detail-desc" class="text-gray-400 text-sm leading-relaxed whitespace-pre-line">Descrição...</p>
+                                <div id="size-section">
+                                    <label
+                                        class="text-white font-bold text-xs uppercase tracking-wider block mb-3">Tamanho</label>
+                                    <div class="flex flex-wrap gap-2" id="size-selector"></div>
+                                </div>
+                            </div>
+                            <div class="mt-10 pt-6 border-t border-white/5">
+                                <button onclick="addToCartDetailed()"
+                                    class="w-full bg-brand hover:bg-brand-hover text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
+                                    <span>Adicionar ao Carrinho</span>
+                                    <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark-900 text-gray-500 py-12 border-t border-white/5 mt-auto">
+            <div class="container mx-auto px-6 text-center text-xs text-gray-600">
+                &copy; 2026 Outlescky. Streetwear & Sneakers.
+            </div>
+        </footer>
+
+        <!-- Notificação -->
+        <div id="toast"
+            class="fixed bottom-6 right-6 bg-white text-black pl-4 pr-6 py-4 rounded shadow-2xl transform translate-y-40 opacity-0 transition-all duration-500 z-50 flex items-center gap-4 border-l-4 border-brand">
+            <div class="bg-green-100 p-1.5 rounded-full">
+                <i data-lucide="check" class="w-4 h-4 text-green-700"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-sm">Produto Adicionado</h4>
+                <p class="text-xs text-gray-500 mt-0.5">Confira no carrinho.</p>
+            </div>
+        </div>
+
+        <!-- Carrinho de Compras -->
+        <div id="cart-sidebar" class="fixed inset-0 z-[60] hidden">
+            <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="cart-overlay"></div>
+            <div id="cart-panel" class="absolute top-0 right-0 h-full w-full md:w-[450px] bg-dark-900 border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+                
+                <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                    <h2 class="text-white text-xl font-black italic uppercase tracking-tighter">Seu Carrinho (<span id="cart-qty-header">0</span>)</h2>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white p-2">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-6">
+                    <div class="text-center py-10 text-gray-500">
+                        <p>Seu carrinho está vazio.</p>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-dark-800 border-t border-white/5">
+                    <div class="flex justify-between items-end mb-6">
+                        <span class="text-gray-400 text-xs uppercase font-bold tracking-widest">Total Estimado</span>
+                        <span id="cart-total" class="text-2xl text-brand font-black italic">R$ 0,00</span>
+                    </div>
+                    <button class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
+                        Finalizar Compra <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript -->
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            brand: {
+                                DEFAULT: '#FACC15',
+                                hover: '#EAB308',
+                                text: '#854D0E',
+                            },
+                            dark: {
+                                900: '#050505',
+                                800: '#121212',
+                                700: '#1A1A1A'
+                            }
+                        }
+                    }
+                }
+            }
+
+            window.addEventListener('load', () => {
+                const loader = document.getElementById('page-loader');
+                setTimeout(() => { loader.classList.add('opacity-0', 'pointer-events-none'); }, 300);
+            });
+
+            const products = [
+                // CONJUNTOS
+                { id: 601, brand: "Outlescky Lab", name: "Kit Urban Night", price: 899.90, images: ["https://images.unsplash.com/photo-1543322748-33df4d247597?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"], imageLabels: ["Look Completo", "T-Shirt"], category: "sets", subCategory: "Streetwear", sizes: ["P", "M", "G"], desc: "CONJUNTO COMPLETO URBAN NIGHT..." },
+                { id: 602, brand: "Nike Sport", name: "Summer Drill Kit", price: 649.90, images: ["https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2000&auto=format&fit=crop"], imageLabels: ["Look Completo"], category: "sets", subCategory: "Sport", sizes: ["M", "G", "GG"], desc: "KIT TREINO VERÃO..." },
+                
+                // TÊNIS
+                { id: 1, brand: "Nike", name: "Air Jordan 1 High", price: 1299.90, image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "sneakers", subCategory: "Nike", sizes: ["39", "40", "41"], desc: "Clássico Jordan." },
+                { id: 2, brand: "Adidas", name: "Yeezy 350", price: 1899.90, image: "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "sneakers", subCategory: "Adidas", sizes: ["40", "42"], desc: "Conforto Boost." },
+                { id: 3, brand: "Vans", name: "Old Skool", price: 399.90, image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "sneakers", subCategory: "Vans", sizes: ["38", "39", "40"], desc: "Para skate." },
+
+                // CAMISAS
+                { id: 101, brand: "Outlescky", name: "Oversized Black", price: 129.90, image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Streetwear", sizes: ["P", "M", "G"], desc: "Algodão pesado." },
+                { id: 102, brand: "Stussy", name: "Graphic Tee", price: 189.90, image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Streetwear", sizes: ["M", "G"], desc: "Estampa exclusiva." },
+                { id: 103, brand: "Nike", name: "Dri-Fit Run", price: 149.90, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Sport", sizes: ["P", "M", "G", "GG"], desc: "Para performance." },
+                { id: 104, brand: "Zara", name: "Linho Casual", price: 229.90, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Casual", sizes: ["M", "G"], desc: "Elegância leve." },
+
+                // CALÇAS
+                { id: 201, brand: "Carhartt", name: "Cargo Olive", price: 349.90, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "pants", subCategory: "Streetwear", sizes: ["40", "42", "44"], desc: "Utilitária." },
+                { id: 202, brand: "Levi's", name: "Jeans 501", price: 299.90, image: "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "pants", subCategory: "Casual", sizes: ["38", "40", "42"], desc: "Clássico denim." },
+                { id: 203, brand: "Nike", name: "Jogger Tech", price: 449.90, image: "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "pants", subCategory: "Sport", sizes: ["P", "M", "G"], desc: "Conforto total." },
+
+                // SHORTS
+                { id: 301, brand: "Nike", name: "Shorts Basket", price: 199.90, image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shorts", subCategory: "Sport", sizes: ["M", "G", "GG"], desc: "Para as quadras." },
+                { id: 302, brand: "H&M", name: "Shorts Chino", price: 149.90, image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shorts", subCategory: "Casual", sizes: ["40", "42"], desc: "Verão essencial." },
+
+                // CUECAS
+                { id: 401, brand: "Calvin Klein", name: "Boxer Pack 3", price: 159.90, image: "https://cdn.dooca.store/140181/products/e9ec6ba90bd900cdcad09e44c3c88edb_1067x1600.jpg?v=1717168343&webp=0", category: "underwear", subCategory: "Boxer", sizes: ["P", "M", "G"], desc: "Algodão premium." },
+
+                // BONÉS
+                { id: 501, brand: "New Era", name: "NY Yankees", price: 199.90, image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "hats", subCategory: "Aba Curva", sizes: ["Único"], desc: "O clássico 9FORTY." },
+                { id: 502, brand: "Nike", name: "Heritage 86", price: 129.90, image: "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "hats", subCategory: "Aba Curva", sizes: ["Único"], desc: "Swoosh frontal." }
+            ];
+
+            const filtersConfig = {
+                sets: {
+                    options: ["Streetwear", "Casual", "Sport"],
+                    sizes: ["P", "M", "G", "GG"],
+                    title: "Estilo do Kit"
+                },
+                sneakers: {
+                    options: ["Nike", "Adidas", "Vans", "New Balance"],
+                    sizes: ["38", "39", "40", "41", "42"],
+                    title: "Marcas"
+                },
+                shirts: {
+                    options: ["Streetwear", "Sport", "Casual"],
+                    sizes: ["P", "M", "G", "GG"],
+                    title: "Estilo"
+                },
+                pants: {
+                    options: ["Streetwear", "Casual", "Sport"],
+                    sizes: ["38", "40", "42", "44"],
+                    title: "Estilo"
+                },
+                shorts: {
+                    options: ["Sport", "Casual"],
+                    sizes: ["P", "M", "G", "GG", "40", "42"],
+                    title: "Estilo"
+                },
+                underwear: {
+                    options: ["Boxer", "Slip"],
+                    sizes: ["P", "M", "G", "GG"],
+                    title: "Modelo"
+                },
+                hats: {
+                    options: ["Aba Curva", "Aba Reta", "Bucket"],
+                    sizes: ["Único"],
+                    title: "Modelo"
+                }
+            };
+
+            let state = {
+                currentView: 'categories',
+                currentCategory: null,
+                activeSubCategories: [],
+                activeSizes: [],
+                maxPrice: 2000,
+                // Carrinho
+                cart: [], // Array para guardar os objetos do produto
+                isCartOpen: false,
+                // Detalhes e Carrossel
+                currentProductId: null,
+                detailSelectedSize: null, // Tamanho escolhido na página de detalhes
+                currentImageIndex: 0,
+                currentProductImages: []
+            };
+
+            function showSection(sectionId) {
+                state.currentView = sectionId === 'categories' ? 'categories' : state.currentView;
+                ['categories-view', 'grid-view', 'details-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+                const section = document.getElementById(sectionId + '-view');
+                section.classList.remove('hidden');
+                section.classList.remove('fade-in');
+                void section.offsetWidth;
+                section.classList.add('fade-in');
+
+                updateBreadcrumbs();
+                window.scrollTo(0, 0);
+            }
+
+            function updateBreadcrumbs(productName = '') {
+                const els = { sep1: document.getElementById('breadcrumb-separator-1'), cat: document.getElementById('breadcrumb-category'), sep2: document.getElementById('breadcrumb-separator-2'), prod: document.getElementById('breadcrumb-product') };
+                Object.values(els).forEach(el => el.classList.add('hidden'));
+
+                if (state.currentView === 'categories') return;
+
+                els.sep1.classList.remove('hidden');
+                els.cat.classList.remove('hidden');
+                const catNames = { sets: 'Conjuntos', sneakers: 'Tênis', shirts: 'Camisas', pants: 'Calças', shorts: 'Shorts', underwear: 'Cuecas', hats: 'Bonés' };
+                els.cat.innerText = catNames[state.currentCategory] || 'Categoria';
+
+                if (state.currentView === 'details') {
+                    els.sep2.classList.remove('hidden');
+                    els.prod.classList.remove('hidden');
+                    els.prod.innerText = productName;
+                }
+            }
+
+            function backToGrid() {
+                if (state.currentCategory) loadCategory(state.currentCategory);
+                else showSection('categories');
+            }
+
+            // --- CATEGORY & FILTERS ---
+            function loadCategory(category) {
+                state.currentCategory = category;
+                state.currentView = 'grid';
+                state.activeSubCategories = [];
+                state.activeSizes = [];
+                state.maxPrice = 2000;
+
+                const titleMap = { sets: 'Conjuntos Completos', sneakers: 'Tênis', shirts: 'Camisas', pants: 'Calças', shorts: 'Shorts', underwear: 'Cuecas', hats: 'Bonés' };
+                document.getElementById('category-title').innerText = titleMap[category] || 'Produtos';
+                
+                renderFilters(category);
+                filterAndRenderProducts();
+                showSection('grid');
+            }
+
+            function renderFilters(category) {
+                const container = document.getElementById('filters-container');
+                const config = filtersConfig[category];
+                if (!config) { container.innerHTML = ''; return; }
+
+                let html = `<div><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">${config.title}</h4><ul class="space-y-3 text-sm text-gray-400">`;
+                config.options.forEach(option => {
+                    const count = products.filter(p => p.category === category && p.subCategory === option).length;
+                    html += `<li class="flex items-center gap-3 hover:text-white cursor-pointer group">
+                        <input type="checkbox" value="${option}" onchange="toggleSubCat('${option}')" class="custom-checkbox w-4 h-4 rounded bg-transparent border-gray-600 checked:bg-brand transition cursor-pointer">
+                        <span class="group-hover:translate-x-1 transition-transform">${option} <span class="text-gray-600 text-xs">(${count})</span></span>
+                    </li>`;
+                });
+                html += `</ul></div>`;
+
+                html += `<div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tamanho</h4><div class="grid grid-cols-4 gap-2">`;
+                config.sizes.forEach(size => {
+                    html += `<button onclick="toggleSizeFilter('${size}', this)" class="h-8 border border-white/20 text-gray-400 text-xs font-bold hover:border-brand hover:text-brand rounded-sm transition">${size}</button>`;
+                });
+                html += `</div></div>`;
+
+                html += `<div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Preço Máximo</h4>
+                    <div class="flex justify-between text-xs text-gray-400 mb-2"><span>R$ 0</span><span id="price-val">R$ 2000</span></div>
+                    <input type="range" min="0" max="2000" step="50" value="2000" oninput="updatePrice(this.value)" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>`;
+                container.innerHTML = html;
+            }
+
+            function toggleSubCat(val) {
+                if (state.activeSubCategories.includes(val)) state.activeSubCategories = state.activeSubCategories.filter(x => x !== val);
+                else state.activeSubCategories.push(val);
+                filterAndRenderProducts();
+            }
+
+            function toggleSizeFilter(val, btn) {
+                if (state.activeSizes.includes(val)) {
+                    state.activeSizes = state.activeSizes.filter(x => x !== val);
+                    btn.classList.remove('bg-brand', 'text-black', 'border-brand');
+                    btn.classList.add('text-gray-400', 'border-white/20');
+                } else {
+                    state.activeSizes.push(val);
+                    btn.classList.remove('text-gray-400', 'border-white/20');
+                    btn.classList.add('bg-brand', 'text-black', 'border-brand');
+                }
+                filterAndRenderProducts();
+            }
+
+            function updatePrice(val) {
+                state.maxPrice = parseInt(val);
+                document.getElementById('price-val').innerText = `R$ ${val}`;
+                filterAndRenderProducts();
+            }
+
+            function clearFilters() {
+                state.activeSubCategories = [];
+                state.activeSizes = [];
+                state.maxPrice = 2000;
+                loadCategory(state.currentCategory);
+            }
+
+            function filterAndRenderProducts() {
+                const container = document.getElementById('products-container');
+                const emptyState = document.getElementById('empty-state');
+                container.innerHTML = '';
+
+                const filtered = products.filter(p => {
+                    if (p.category !== state.currentCategory) return false;
+                    if (state.activeSubCategories.length > 0 && !state.activeSubCategories.includes(p.subCategory)) return false;
+                    if (p.price > state.maxPrice) return false;
+                    if (state.activeSizes.length > 0) {
+                        const hasSize = p.sizes.some(s => state.activeSizes.includes(s));
+                        if (!hasSize) return false;
+                    }
+                    return true;
+                });
+
+                if (filtered.length === 0) {
+                    container.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                } else {
+                    container.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+                    filtered.forEach(p => container.appendChild(createProductCard(p)));
+                }
+                document.getElementById('product-count').innerText = `${filtered.length} produtos`;
+                lucide.createIcons();
+            }
+
+            function createProductCard(product) {
+                const article = document.createElement('article');
+                article.className = "group cursor-pointer animate-[fadeIn_0.5s_ease-out]";
+                article.onclick = () => loadProductDetails(product.id);
+                const imgSrc = Array.isArray(product.images) ? product.images[0] : product.image;
+                article.innerHTML = `
+                    <div class="relative aspect-[4/5] bg-dark-800 mb-3 overflow-hidden rounded-sm border border-transparent group-hover:border-white/10 transition-colors">
+                        <img src="${imgSrc}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out">
+                        <div class="absolute bottom-0 w-full bg-white text-black font-bold py-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-center justify-center gap-2 text-xs uppercase tracking-wider z-20">Ver <i data-lucide="eye" class="w-3 h-3"></i></div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-gray-500 text-[10px] uppercase font-bold tracking-wider">${product.subCategory}</p>
+                        <h3 class="text-white font-bold text-sm leading-tight group-hover:text-brand transition-colors line-clamp-1">${product.name}</h3>
+                        <div class="mt-1 font-bold text-white">R$ ${product.price.toFixed(2)}</div>
+                    </div>`;
+                return article;
+            }
+
+            // --- DETAILS PAGE LOGIC ---
+            function loadProductDetails(id) {
+                const product = products.find(p => p.id === id);
+                if (!product) return;
+
+                state.currentProductId = product.id;
+                state.detailSelectedSize = product.sizes[0]; // Seleciona o primeiro tamanho por padrão
+                state.currentView = 'details';
+                
+                showSection('details');
+                updateBreadcrumbs(product.name);
+
+                // Reset Carousel
+                if (Array.isArray(product.images) && product.images.length > 1) {
+                    state.currentProductImages = product.images;
+                    state.currentProductLabels = product.imageLabels || [];
+                    state.currentImageIndex = 0;
+                    document.getElementById('carousel-controls').classList.remove('hidden');
+                    updateDetailImageDisplay();
+                } else {
+                    state.currentProductImages = [];
+                    state.currentProductLabels = [];
+                    document.getElementById('carousel-controls').classList.add('hidden');
+                    document.getElementById('detail-image').src = Array.isArray(product.images) ? product.images[0] : product.image;
+                }
+
+                document.getElementById('detail-brand').innerText = product.brand;
+                document.getElementById('detail-title').innerText = product.name;
+                document.getElementById('detail-price').innerText = `R$ ${product.price.toFixed(2)}`;
+                document.getElementById('detail-desc').innerText = product.desc;
+
+                renderSizeSelector(product.sizes);
+            }
+
+            function renderSizeSelector(sizes) {
+                const sizeContainer = document.getElementById('size-selector');
+                sizeContainer.innerHTML = '';
+                sizes.forEach(size => {
+                    const btn = document.createElement('button');
+                    const isSelected = state.detailSelectedSize === size;
+                    // Estilo base
+                    let classes = "w-10 h-10 border text-sm font-bold transition flex items-center justify-center rounded-sm ";
+                    // Estilo condicional
+                    if (isSelected) {
+                        classes += "bg-brand text-black border-brand";
+                    } else {
+                        classes += "border-white/20 text-gray-400 hover:border-brand hover:text-brand";
+                    }
+                    btn.className = classes;
+                    btn.innerText = size;
+                    btn.onclick = () => selectDetailSize(size);
+                    sizeContainer.appendChild(btn);
+                });
+            }
+
+            function selectDetailSize(size) {
+                state.detailSelectedSize = size;
+                // Re-renderizar apenas os botões de tamanho para atualizar o visual
+                const product = products.find(p => p.id === state.currentProductId);
+                renderSizeSelector(product.sizes);
+            }
+
+            // --- CAROUSEL ---
+            function updateDetailImageDisplay() {
+                const imgEl = document.getElementById('detail-image');
+                const counterEl = document.getElementById('image-counter');
+                const labelContainer = document.getElementById('item-label');
+                
+                imgEl.classList.remove('image-fade');
+                void imgEl.offsetWidth; 
+                imgEl.classList.add('image-fade');
+                
+                imgEl.src = state.currentProductImages[state.currentImageIndex];
+                counterEl.innerText = `${state.currentImageIndex + 1} / ${state.currentProductImages.length}`;
+
+                if (state.currentProductLabels[state.currentImageIndex]) {
+                    labelContainer.querySelector('span').innerText = state.currentProductLabels[state.currentImageIndex];
+                    labelContainer.classList.remove('opacity-0');
+                } else {
+                    labelContainer.classList.add('opacity-0');
+                }
+            }
+
+            function nextImage() {
+                if (state.currentProductImages.length <= 1) return;
+                state.currentImageIndex = (state.currentImageIndex + 1) % state.currentProductImages.length;
+                updateDetailImageDisplay();
+            }
+
+            function prevImage() {
+                if (state.currentProductImages.length <= 1) return;
+                state.currentImageIndex = (state.currentImageIndex - 1 + state.currentProductImages.length) % state.currentProductImages.length;
+                updateDetailImageDisplay();
+            }
+
+            // --- CART LOGIC (NOVA E FUNCIONAL) ---
+
+            function toggleCart() {
+                const sidebar = document.getElementById('cart-sidebar');
+                const overlay = document.getElementById('cart-overlay');
+                const panel = document.getElementById('cart-panel');
+                
+                if (sidebar.classList.contains('hidden')) {
+                    // Abrir
+                    sidebar.classList.remove('hidden');
+                    setTimeout(() => {
+                        overlay.classList.remove('opacity-0');
+                        panel.classList.remove('translate-x-full');
+                    }, 10);
+                } else {
+                    // Fechar
+                    overlay.classList.add('opacity-0');
+                    panel.classList.add('translate-x-full');
+                    setTimeout(() => {
+                        sidebar.classList.add('hidden');
+                    }, 300);
+                }
+            }
+
+            function addToCartDetailed() {
+                const product = products.find(p => p.id === state.currentProductId);
+                if (!product) return;
+
+                // Adiciona ao array do carrinho
+                state.cart.push({
+                    cartId: Date.now(), // ID único para o item no carrinho (permite duplicatas com tamanhos diferentes)
+                    productId: product.id,
+                    name: product.name,
+                    price: product.price,
+                    size: state.detailSelectedSize,
+                    image: Array.isArray(product.images) ? product.images[0] : product.image,
+                    subCategory: product.subCategory
+                });
+
+                updateCartCount();
+                renderCart();
+                showToast();
+            }
+
+            function removeFromCart(cartId) {
+                state.cart = state.cart.filter(item => item.cartId !== cartId);
+                updateCartCount();
+                renderCart();
+            }
+
+            function updateCartCount() {
+                const count = state.cart.length;
+                const badge = document.getElementById('cart-count');
+                document.getElementById('cart-qty-header').innerText = count;
+                
+                badge.innerText = count;
+                if (count > 0) badge.classList.remove('opacity-0');
+                else badge.classList.add('opacity-0');
+            }
+
+            function renderCart() {
+                const container = document.getElementById('cart-items-container');
+                const totalEl = document.getElementById('cart-total');
+                
+                if (state.cart.length === 0) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-gray-500 gap-4 mt-20">
+                            <i data-lucide="shopping-bag" class="w-12 h-12 opacity-20"></i>
+                            <p class="text-sm font-medium">Seu carrinho está vazio.</p>
+                            <button onclick="toggleCart()" class="text-brand text-xs font-bold uppercase hover:underline">Continuar Comprando</button>
+                        </div>
+                    `;
+                    totalEl.innerText = "R$ 0,00";
+                } else {
+                    let html = '';
+                    let total = 0;
+                    
+                    state.cart.forEach(item => {
+                        total += item.price;
+                        html += `
+                            <div class="flex gap-4 animate-[fadeIn_0.3s_ease-out]">
+                                <div class="w-20 h-24 bg-dark-800 rounded-sm overflow-hidden flex-shrink-0">
+                                    <img src="${item.image}" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1 flex flex-col justify-between py-1">
+                                    <div>
+                                        <h4 class="text-white text-sm font-bold leading-tight line-clamp-2 mb-1">${item.name}</h4>
+                                        <p class="text-gray-500 text-xs font-medium uppercase tracking-wider">${item.subCategory} • Tamanho: <span class="text-gray-300">${item.size}</span></p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-brand font-bold text-sm">R$ ${item.price.toFixed(2)}</span>
+                                        <button onclick="removeFromCart(${item.cartId})" class="text-gray-600 hover:text-red-500 transition p-1">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                    totalEl.innerText = `R$ ${total.toFixed(2)}`;
+                }
+                lucide.createIcons();
+            }
+
+            function showToast() {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-40', 'opacity-0');
+                setTimeout(() => { toast.classList.add('translate-y-40', 'opacity-0'); }, 3000);
+            }
+
+            // Inicialização
+            lucide.createIcons();
+        </script>
+
+        <!-- CSS -->
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+
+            .bg-noise {
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            }
+
+            .custom-checkbox:checked {
+                background-color: #FACC15;
+                border-color: #FACC15;
+                background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+            }
+
+            input[type=range] {
+                -webkit-appearance: none;
+                background: transparent;
+            }
+
+            input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: 16px;
+                width: 16px;
+                border-radius: 50%;
+                background: #FACC15;
+                cursor: pointer;
+                margin-top: -6px;
+            }
+
+            input[type=range]::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 4px;
+                cursor: pointer;
+                background: #333;
+                border-radius: 2px;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #0a0a0a;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #333;
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #FACC15;
+            }
+
+            .fade-in {
+                animation: fadeIn 0.4s ease-out forwards;
+            }
+
+            /* Animação suave para troca de imagem */
+            .image-fade { animation: imageFade 0.3s ease-in-out; }
+            @keyframes imageFade { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </body>
+
+</html>

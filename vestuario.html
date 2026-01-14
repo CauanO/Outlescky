@@ -9,26 +9,26 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     </head>
     <body class="bg-dark-900 text-gray-100 bg-noise antialiased selection:bg-brand selection:text-black flex flex-col min-h-screen">
-        <!-- LOADER DE PÁGINA (ADICIONADO) -->
+        <!-- LOADER DE PÁGINA -->
         <div id="page-loader" class="fixed inset-0 z-[100] bg-dark-900 flex flex-col items-center justify-center transition-opacity duration-500">
             <div class="animate-spin rounded-full h-12 w-12 border-4 border-dark-800 border-t-brand mb-4"></div>
             <span class="text-white text-xs font-bold uppercase tracking-widest animate-pulse">Carregando</span>
         </div>
 
-        <!-- Frete -->
+        <!-- Enviamos para todo o Brasil • Compra 100% Segura -->
         <div class="bg-black border-b border-white/5 relative z-50 overflow-hidden h-10 flex items-center">
             <div class="flex whitespace-nowrap animate-marquee">
                 <div class="flex gap-12 px-6">
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
                 </div>
                 <div class="flex gap-12 px-6">
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
-                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Frete Grátis Brasil • Compras acima de R$ 299</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
+                    <span class="text-brand text-[11px] md:text-xs font-bold tracking-[0.2em] uppercase">Enviamos para todo o Brasil • Compra 100% Segura</span>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
             </div>
         </header>
 
-        <!-- Nav -->
+        <!-- Nav Breadcrumbs -->
         <div class="bg-dark-800 border-b border-white/5 sticky top-20 z-30">
             <div class="container mx-auto px-6 py-4 flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest font-bold">
                 <button onclick="showSection('categories')" class="hover:text-brand transition">Loja</button>
@@ -316,6 +316,86 @@
             </div>
         </div>
 
+        <!-- MODAL DE CHECKOUT (ADICIONADO) -->
+        <div id="checkout-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="toggleCheckout(false)"></div>
+            
+            <!-- Modal Content -->
+            <div class="bg-dark-800 border border-white/10 w-full max-w-md rounded-lg shadow-2xl relative z-10 overflow-hidden transform transition-all scale-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <div class="p-6 border-b border-white/5 flex justify-between items-center bg-dark-900 sticky top-0 z-20">
+                    <h3 class="text-white font-black italic uppercase text-xl tracking-tighter">Finalizar Pedido</h3>
+                    <button onclick="toggleCheckout(false)" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                
+                <div class="p-6 space-y-5">
+                    <!-- Nome -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Seu Nome</label>
+                        <input type="text" id="cust-name" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white focus:border-brand focus:outline-none transition-colors" placeholder="Como devemos te chamar?">
+                    </div>
+
+                    <!-- Entrega -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Método de Entrega</label>
+                        <select id="cust-delivery" onchange="toggleDeliveryFields()" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white focus:border-brand focus:outline-none appearance-none cursor-pointer">
+                            <option value="Retirada" selected>Retirar na Loja (Salvador)</option>
+                            <option value="Entrega">Receber em Casa (Motoboy/Correios)</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos de Endereço (Ocultos por padrão) -->
+                    <div id="address-fields" class="hidden space-y-4 border-l-2 border-brand pl-4 bg-white/5 p-4 rounded-r-md">
+                         <h4 class="text-brand text-xs font-bold uppercase tracking-widest mb-2">Endereço de Entrega</h4>
+                         <div>
+                            <input type="text" id="addr-street" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white text-sm focus:border-brand focus:outline-none mb-3" placeholder="Rua / Avenida">
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <input type="text" id="addr-number" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white text-sm focus:border-brand focus:outline-none" placeholder="Número">
+                                <input type="text" id="addr-hood" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white text-sm focus:border-brand focus:outline-none" placeholder="Bairro">
+                            </div>
+                            <input type="text" id="addr-comp" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white text-sm focus:border-brand focus:outline-none" placeholder="Complemento (Opcional)">
+                         </div>
+                    </div>
+
+                    <!-- Pagamento -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Forma de Pagamento</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="payment" value="Pix" class="peer sr-only" checked>
+                                <div class="border border-white/10 rounded p-3 text-center text-sm text-gray-400 peer-checked:bg-brand peer-checked:text-black peer-checked:border-brand transition-all font-bold hover:bg-white/5 group-hover:border-white/30">
+                                    PIX (5% OFF)
+                                </div>
+                            </label>
+                            <label class="cursor-pointer group relative" id="card-option">
+                                <input type="radio" name="payment" value="Cartão" class="peer sr-only">
+                                <div id="card-label" class="border border-white/10 rounded p-3 text-center text-sm text-gray-400 peer-checked:bg-brand peer-checked:text-black peer-checked:border-brand transition-all font-bold hover:bg-white/5 group-hover:border-white/30">
+                                    Cartão de Crédito
+                                </div>
+                                <!-- Tooltip de Bloqueio -->
+                                <div id="card-disabled-tooltip" class="hidden absolute -top-8 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">
+                                    Somente PIX para entrega
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Resumo Rápido -->
+                    <div class="bg-black/30 p-3 rounded border border-white/5 text-xs text-gray-400 flex justify-between">
+                        <span>Total do Pedido:</span>
+                        <span id="checkout-total-display" class="text-brand font-bold text-sm">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-white/5 bg-dark-900 sticky bottom-0 z-20">
+                    <button onclick="sendOrderToWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
+                        <span>Enviar Pedido</span>
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Carrinho de Compras -->
         <div id="cart-sidebar" class="fixed inset-0 z-[60] hidden">
             <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="cart-overlay"></div>
@@ -339,7 +419,7 @@
                         <span class="text-gray-400 text-xs uppercase font-bold tracking-widest">Total Estimado</span>
                         <span id="cart-total" class="text-2xl text-brand font-black italic">R$ 0,00</span>
                     </div>
-                    <button class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
+                    <button onclick="toggleCheckout(true)" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
                         Finalizar Compra <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -900,6 +980,115 @@
                 const toast = document.getElementById('toast');
                 toast.classList.remove('translate-y-40', 'opacity-0');
                 setTimeout(() => { toast.classList.add('translate-y-40', 'opacity-0'); }, 3000);
+            }
+
+            // --- CHECKOUT LOGIC ---
+            function toggleCheckout(show) {
+                const modal = document.getElementById('checkout-modal');
+                const sidebar = document.getElementById('cart-sidebar');
+                
+                if (show) {
+                    let total = state.cart.reduce((acc, item) => acc + item.price, 0);
+                    document.getElementById('checkout-total-display').innerText = `R$ ${total.toFixed(2)}`;
+                    toggleCart(); // Fecha o sidebar do carrinho para focar no modal
+                    modal.classList.remove('hidden');
+                    toggleDeliveryFields(); // Garante o estado inicial correto dos campos
+                } else {
+                    modal.classList.add('hidden');
+                }
+            }
+
+            function toggleDeliveryFields() {
+                const deliverySelect = document.getElementById('cust-delivery');
+                const addressFields = document.getElementById('address-fields');
+                const cardOption = document.getElementById('card-option');
+                const cardInput = cardOption.querySelector('input');
+                const pixInput = document.querySelector('input[value="Pix"]');
+                const cardLabel = document.getElementById('card-label');
+                const tooltip = document.getElementById('card-disabled-tooltip');
+
+                if (deliverySelect.value === 'Entrega') {
+                    // Mostrar campos de endereço
+                    addressFields.classList.remove('hidden');
+                    
+                    // Bloquear Cartão
+                    cardInput.disabled = true;
+                    cardLabel.classList.add('opacity-50', 'cursor-not-allowed');
+                    cardOption.classList.remove('cursor-pointer');
+                    cardOption.classList.add('cursor-not-allowed');
+                    tooltip.classList.remove('hidden'); // Mostrar tooltip
+                    
+                    // Forçar PIX
+                    pixInput.checked = true;
+                } else {
+                    // Esconder campos de endereço
+                    addressFields.classList.add('hidden');
+                    
+                    // Liberar Cartão
+                    cardInput.disabled = false;
+                    cardLabel.classList.remove('opacity-50', 'cursor-not-allowed');
+                    cardOption.classList.add('cursor-pointer');
+                    cardOption.classList.remove('cursor-not-allowed');
+                    tooltip.classList.add('hidden'); // Esconder tooltip
+                }
+            }
+
+            function sendOrderToWhatsApp() {
+                if (state.cart.length === 0) return;
+
+                const name = document.getElementById('cust-name').value || "Cliente";
+                const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+                const deliveryMethod = document.getElementById('cust-delivery').value;
+                
+                // Validação de Endereço se for Entrega
+                let addressText = "";
+                if (deliveryMethod === 'Entrega') {
+                    const street = document.getElementById('addr-street').value;
+                    const number = document.getElementById('addr-number').value;
+                    const hood = document.getElementById('addr-hood').value;
+                    const comp = document.getElementById('addr-comp').value;
+
+                    if (!street || !number || !hood) {
+                        alert("Por favor, preencha o endereço completo para entrega.");
+                        return;
+                    }
+                    addressText = `\n📍 *Endereço de Entrega:*\n${street}, ${number} - ${hood}\n${comp ? `(${comp})` : ''}`;
+                }
+
+                let message = `*NOVO PEDIDO - OUTLESCKY* 🧢\n`;
+                message += `--------------------------------\n`;
+                message += `👤 *Cliente:* ${name}\n`;
+                message += `💳 *Pagamento:* ${paymentMethod}\n`;
+                message += `📦 *Entrega:* ${deliveryMethod}\n`;
+                if (addressText) message += addressText + "\n";
+                message += `--------------------------------\n\n`;
+                message += `*ITENS DO PEDIDO:*\n`;
+
+                let total = 0;
+
+                state.cart.forEach((item, index) => {
+                    total += item.price;
+                    message += `\n🛒 *ITEM ${index + 1}*\n`;
+                    message += `▪️ ${item.name}\n`;
+                    message += `▪️ Tamanho: ${item.size}\n`;
+                    message += `▪️ Preço: R$ ${item.price.toFixed(2)}\n`;
+                    message += `📸 Ver peça: ${item.image}\n`; 
+                });
+
+                message += `\n--------------------------------\n`;
+                message += `💰 *TOTAL FINAL: R$ ${total.toFixed(2)}*\n`;
+                message += `--------------------------------\n`;
+                
+                if(deliveryMethod === 'Retirada') {
+                    message += `\n📍 *Obs:* Irei retirar na loja.`;
+                }
+
+                const encodedMessage = encodeURIComponent(message);
+                const phoneNumber = "5571999999999"; // SEU NÚMERO AQUI
+                
+                window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+                
+                toggleCheckout(false);
             }
 
             // Inicialização

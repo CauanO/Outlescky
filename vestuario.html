@@ -10,13 +10,13 @@
     </head>
     <body class="bg-dark-900 text-gray-100 bg-noise antialiased selection:bg-brand selection:text-black flex flex-col min-h-screen overflow-hidden">
         
-        <!-- LOADER DE PÁGINA -->
+        <!-- Load -->
         <div id="page-loader" class="fixed inset-0 z-[100] bg-dark-900 flex flex-col items-center justify-center transition-opacity duration-500">
             <div class="animate-spin rounded-full h-12 w-12 border-4 border-dark-800 border-t-brand mb-4"></div>
             <span class="text-white text-xs font-bold uppercase tracking-widest animate-pulse">Carregando</span>
         </div>
 
-        <!-- Enviamos para todo o Brasil • Compra 100% Segura -->
+        <!-- header animado no top da aplicação -->
         <div class="bg-black border-b border-white/5 relative z-50 overflow-hidden h-10 flex items-center">
             <div class="flex whitespace-nowrap animate-marquee">
                 <div class="flex gap-12 px-6">
@@ -34,7 +34,6 @@
             </div>
         </div>
 
-        <!-- Header -->
         <header class="sticky top-0 z-40 bg-dark-900/95 backdrop-blur-lg border-b border-white/5 transition-all duration-300">
             <div class="container mx-auto px-6 h-20 flex items-center justify-between">
                 <!-- Logo -->
@@ -42,37 +41,38 @@
                     <span class="text-3xl font-black italic text-white">OUTLE<span class="text-brand">SCKY</span></span>
                 </a>
 
-                <!-- Nav -->
+                <!-- NavBar -->
                 <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-400">
-                    <a href="#" onclick="showSection('categories')"
+                    <a href="#" onclick="alternarSecao('categories')"
                         class="hover:text-white transition-colors duration-200 py-2">Início</a>
-                    <a href="#" onclick="loadCategory('sets')" 
+                    <a href="#" onclick="carregarCategoria('sets')" 
                         class="hover:text-brand text-brand font-bold transition-colors duration-200 py-2">Conjuntos</a>  
-                    <a href="#" onclick="loadCategory('sneakers')"
+                    <a href="#" onclick="carregarCategoria('sneakers')"
                         class="hover:text-white transition-colors duration-200 py-2">Tênis</a>
-                    <a href="#" onclick="loadCategory('shirts')"
+                    <a href="#" onclick="carregarCategoria('shirts')"
                         class="hover:text-white transition-colors duration-200 py-2">Camisas</a>
-                    <a href="#" onclick="loadCategory('pants')"
+                    <a href="#" onclick="carregarCategoria('pants')"
                         class="hover:text-white transition-colors duration-200 py-2">Calças</a>
                     <div class="relative group">
-                        <button class="hover:text-white transition-colors duration-200 py-2 flex items-center gap-1">Mais <i
-                                data-lucide="chevron-down" class="w-3 h-3"></i></button>
+                        <button class="hover:text-white transition-colors duration-200 py-2 flex items-center gap-1">Mais 
+                            <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                        </button>
                         <div
                             class="absolute top-full left-0 w-40 bg-dark-800 border border-white/10 rounded-md shadow-xl py-2 hidden group-hover:block">
-                            <a href="#" onclick="loadCategory('shorts')"
+                            <a href="#" onclick="carregarCategoria('shorts')"
                                 class="block px-4 py-2 hover:bg-white/5 hover:text-brand">Shorts</a>
-                            <a href="#" onclick="loadCategory('hats')"
+                            <a href="#" onclick="carregarCategoria('hats')"
                                 class="block px-4 py-2 hover:bg-white/5 hover:text-brand">Bonés</a>
-                            <a href="#" onclick="loadCategory('underwear')"
+                            <a href="#" onclick="carregarCategoria('underwear')"
                                 class="block px-4 py-2 hover:bg-white/5 hover:text-brand">Cuecas</a>
                         </div>
                     </div>
                 </nav>
 
-                <!-- Botão de pesquisa e carrinho -->
+                <!-- Botão do carrinho -->
                 <div class="flex items-center gap-4 text-white">
                     <button class="p-2 hover:text-brand transition-colors"><i data-lucide="search" class="w-5 h-5"></i></button>
-                    <button onclick="toggleCart()" class="p-2 hover:text-brand transition-colors relative group">
+                    <button onclick="alternarVisibilidadeCarrinho()" class="p-2 hover:text-brand transition-colors relative group">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
                         <span id="cart-count" class="absolute top-1 right-0.5 bg-brand text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 transition-opacity transform transition-transform">0</span>
                     </button>
@@ -80,27 +80,29 @@
             </div>
         </header>
 
-        <!-- Nav Breadcrumbs -->
+        <!-- Segundo NavBar -->
         <div class="bg-dark-800 border-b border-white/5 sticky top-20 z-30">
             <div class="container mx-auto px-6 py-4 flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest font-bold">
-                <button onclick="showSection('categories')" class="hover:text-brand transition">Loja</button>
+                <button onclick="alternarSecao('categories')" class="hover:text-brand transition">Loja</button>
                 <span id="breadcrumb-separator-1" class="hidden">/</span>
-                <span id="breadcrumb-category" class="text-white hidden cursor-pointer hover:text-brand transition" onclick="backToGrid()">Category</span>
+                <span id="breadcrumb-category" class="text-white hidden cursor-pointer hover:text-brand transition" onclick="voltarParaGrade()">Category</span>
                 <span id="breadcrumb-separator-2" class="hidden">/</span>
                 <span id="breadcrumb-product" class="text-brand hidden truncate max-w-[150px]">Product</span>
             </div>
         </div>
 
+        <!-- Body -->
         <main class="flex-1 container mx-auto px-6 py-12">
 
-            <!-- SECTION 1: Categorias (COMPLETO) -->
+            <!-- Listagem das Categorias -->
             <section id="categories-view" class="fade-in">
                 <h1 class="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white mb-2 text-center md:text-left">NAVEGUE POR <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-yellow-600 pr-2">ESTILO</span></h1>
                 <p class="text-gray-500 mb-10 text-center md:text-left text-sm">Explore nossas coleções separadas por categoria.</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- CONJUNTOS (Imagem Atualizada) -->
-                    <div onclick="loadCategory('sets')" class="col-span-1 md:col-span-2 lg:col-span-2 group relative h-64 md:h-80 overflow-hidden rounded-lg cursor-pointer border border-brand/30 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.2)]">
+
+                    <!-- Conjuntos -->
+                    <div onclick="carregarCategoria('sets')" class="col-span-1 md:col-span-2 lg:col-span-2 group relative h-64 md:h-80 overflow-hidden rounded-lg cursor-pointer border border-brand/30 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.2)]">
                         <img src="https://images.unsplash.com/photo-1588117305388-c2631a279f82?q=80&w=2000&auto=format&fit=crop" alt="Conjuntos" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -111,7 +113,7 @@
                     </div>
 
                     <!-- Tênis -->
-                    <div onclick="loadCategory('sneakers')" class="group relative h-64 md:h-80 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                    <div onclick="carregarCategoria('sneakers')" class="group relative h-64 md:h-80 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
                         <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Tênis" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -121,7 +123,7 @@
                     </div>
 
                     <!-- Camisas -->
-                    <div onclick="loadCategory('shirts')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                    <div onclick="carregarCategoria('shirts')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
                         <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Camisas" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -131,7 +133,7 @@
                     </div>
 
                     <!-- Calças -->
-                    <div onclick="loadCategory('pants')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                    <div onclick="carregarCategoria('pants')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
                         <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Calças" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -141,7 +143,7 @@
                     </div>
 
                     <!-- Shorts -->
-                    <div onclick="loadCategory('shorts')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                    <div onclick="carregarCategoria('shorts')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
                         <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Shorts" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -151,7 +153,7 @@
                     </div>
 
                     <!-- Bonés -->
-                    <div onclick="loadCategory('hats')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                    <div onclick="carregarCategoria('hats')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
                         <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Bonés" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -161,7 +163,7 @@
                     </div>
 
                     <!-- Cuecas -->
-                    <div onclick="loadCategory('underwear')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
+                    <div onclick="carregarCategoria('underwear')" class="group relative h-64 overflow-hidden rounded-lg cursor-pointer border border-white/10 hover:border-brand transition-all hover:shadow-[0_0_30px_rgba(250,204,21,0.1)]">
                         <img src="https://s2.glbimg.com/h6zCU9IDW87K_eRKCfsqdQNFp1Q=/smart/e.glbimg.com/og/ed/f/original/2019/02/18/david_beckham.jpg" alt="Cuecas" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100 filter grayscale hover:grayscale-0">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-8">
                             <div class="bg-brand text-black text-xs font-black uppercase px-2 py-1 inline-block w-fit mb-2">Novo</div>
@@ -172,27 +174,24 @@
                 </div>
             </section>
 
-            <!-- SECTION 2: Produtos -->
+            <!-- Configuração dos Filtros -->
             <section id="grid-view" class="hidden fade-in">
                 <div class="flex flex-col lg:flex-row gap-12">
 
-                    <!-- Sidebar Dinâmica - Filtos -->
+                    <!-- Filtros -->
                     <aside class="hidden lg:block w-64 flex-shrink-0 space-y-8">
                         <div class="flex items-center justify-between border-b border-white/10 pb-4">
                             <h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2">
                                 <i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand"></i> Filtros
                             </h3>
-                            <button onclick="clearFilters()"
+                            <button onclick="limparFiltros()"
                                 class="text-[10px] text-gray-500 hover:text-white uppercase tracking-wider underline">Limpar</button>
                         </div>
 
-                        <!-- Container Filtros -->
-                        <div id="filters-container" class="space-y-8">
-                            <!-- Injetado via JS -->
-                        </div>
+                        <div id="filters-container" class="space-y-8"></div>
                     </aside>
 
-                    <!-- Área Principal -->
+                    <!-- Filtros -->
                     <div class="flex-1">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
                             <div>
@@ -201,65 +200,55 @@
                                     Categoria</h2>
                                 <p class="text-gray-500 text-sm mt-2" id="product-count">Carregando...</p>
                             </div>
-                            <button onclick="toggleMobileFilters()" class="lg:hidden w-full sm:w-auto bg-dark-800 border border-white/10 text-white px-4 py-3 rounded flex items-center justify-center gap-2 hover:bg-dark-700 transition">
+                            <button onclick="alternarFiltrosMobile()" class="lg:hidden w-full sm:w-auto bg-dark-800 border border-white/10 text-white px-4 py-3 rounded flex items-center justify-center gap-2 hover:bg-dark-700 transition">
                                 <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filtrar
                             </button>
                         </div>
 
-                        <!-- Grid -->
                         <div id="products-container"
                             class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8">
-                            <!-- Products -->
                         </div>
 
-                        <!-- Empty State -->
                         <div id="empty-state" class="hidden text-center py-20">
                             <div class="bg-dark-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i data-lucide="search-x" class="w-8 h-8 text-gray-600"></i>
                             </div>
                             <h3 class="text-white font-bold text-lg mb-2">Nenhum produto encontrado</h3>
                             <p class="text-gray-500 text-sm">Tente ajustar seus filtros.</p>
-                            <button onclick="clearFilters()"
+                            <button onclick="limparFiltros()"
                                 class="mt-4 text-brand text-sm font-bold hover:underline">Limpar filtros</button>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 3: Datalhes dos produtos -->
+            <!-- Pagina de Detalhes dos Produtos -->
             <section id="details-view" class="hidden fade-in">
-                <!-- (Conteúdo idêntico ao anterior para detalhes) -->
                 <div class="bg-dark-800 rounded-lg overflow-hidden border border-white/5 shadow-2xl">
                     <div class="grid grid-cols-1 lg:grid-cols-2">
-                        <!-- Área da Imagem Atualizada com Carrossel -->
-                        <div class="bg-gray-100 relative h-[400px] lg:h-[600px] group overflow-hidden bg-gray-900">
-                            <!-- Imagem Principal -->
+                        <div class="bg-gray-100 relative h-[500px] lg:h-[800px] group overflow-hidden bg-gray-900">
                             <img id="detail-image" src="" alt="" class="w-full h-full object-cover transition-opacity duration-300">
                             
-                            <!-- Badge Novo -->
                             <span id="detail-badge" class="absolute top-6 left-6 bg-black text-white px-4 py-2 text-xs font-bold uppercase tracking-widest hidden shadow-lg z-20">Novo</span>
                             
-                            <!-- Controles do Carrossel (Setas) - Inicialmente Ocultos -->
                             <div id="carousel-controls" class="hidden">
-                                <button onclick="prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-brand hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-sm transition z-20">
+                                <button onclick="imagemAnterior()" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-brand hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-sm transition z-20">
                                     <i data-lucide="chevron-left" class="w-6 h-6"></i>
                                 </button>
-                                <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-brand hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-sm transition z-20">
+                                <button onclick="proximaImagem()" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-brand hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-sm transition z-20">
                                     <i data-lucide="chevron-right" class="w-6 h-6"></i>
                                 </button>
-                                <!-- Contador -->
                                 <div class="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
                                     <span id="image-counter" class="bg-black/70 text-white text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur">1 / 5</span>
                                 </div>
                             </div>
 
-                            <!-- Etiqueta do Item (Nome da peça quando passa pro lado) -->
                             <div id="item-label" class="absolute bottom-16 left-0 right-0 text-center pointer-events-none opacity-0 transition-opacity duration-300 z-10">
                                 <span class="bg-brand text-black font-bold uppercase text-xs px-3 py-1 rounded-sm shadow-lg">Detalhe do Item</span>
                             </div>
                         </div>
                         <div class="p-8 lg:p-12 flex flex-col relative">
-                            <button onclick="backToGrid()"
+                            <button onclick="voltarParaGrade()"
                                 class="absolute top-8 left-8 lg:static lg:mb-8 text-gray-500 hover:text-brand flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-colors">
                                 <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
                             </button>
@@ -286,7 +275,7 @@
                                 </div>
                             </div>
                             <div class="mt-10 pt-6 border-t border-white/5">
-                                <button onclick="addToCartDetailed()"
+                                <button onclick="adicionarProdutoAoCarrinho()"
                                     class="w-full bg-brand hover:bg-brand-hover text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
                                     <span>Adicionar ao Carrinho</span>
                                     <i data-lucide="shopping-bag" class="w-4 h-4"></i>
@@ -306,7 +295,7 @@
             </div>
         </footer>
 
-        <!-- Toast -->
+        <!-- Notifição de Produtos adicionado no carrinho -->
         <div id="toast"
             class="fixed bottom-6 right-6 bg-white text-black pl-4 pr-6 py-4 rounded shadow-2xl transform translate-y-40 opacity-0 transition-all duration-500 z-[80] flex items-center gap-4 border-l-4 border-brand">
             <div class="bg-green-100 p-1.5 rounded-full">
@@ -318,35 +307,30 @@
             </div>
         </div>
 
-        <!-- MODAL DE CHECKOUT (ADICIONADO) -->
+        <!-- Modal de Checkout -->
         <div id="checkout-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4">
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="toggleCheckout(false)"></div>
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="alternarCheckout(false)"></div>
             
-            <!-- Modal Content -->
             <div class="bg-dark-800 border border-white/10 w-full max-w-md rounded-lg shadow-2xl relative z-10 overflow-hidden transform transition-all scale-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
                 <div class="p-6 border-b border-white/5 flex justify-between items-center bg-dark-900 sticky top-0 z-20">
                     <h3 class="text-white font-black italic uppercase text-xl tracking-tighter">Finalizar Pedido</h3>
-                    <button onclick="toggleCheckout(false)" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    <button onclick="alternarCheckout(false)" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
                 
                 <div class="p-6 space-y-5">
-                    <!-- Nome -->
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Seu Nome <span class="text-red-500">*</span></label>
                         <input type="text" id="cust-name" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white focus:border-brand focus:outline-none transition-colors" placeholder="Digite seu nome completo">
                     </div>
 
-                    <!-- Entrega -->
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Método de Entrega</label>
-                        <select id="cust-delivery" onchange="toggleDeliveryFields()" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white focus:border-brand focus:outline-none appearance-none cursor-pointer">
+                        <select id="cust-delivery" onchange="alternarCamposEntrega()" class="w-full bg-dark-900 border border-white/10 rounded p-3 text-white focus:border-brand focus:outline-none appearance-none cursor-pointer">
                             <option value="Retirada" selected>Retirar na Loja (Salvador)</option>
                             <option value="Entrega">Receber em Casa (Motoboy/Correios)</option>
                         </select>
                     </div>
 
-                    <!-- Campos de Endereço (Ocultos por padrão) -->
                     <div id="address-fields" class="hidden space-y-4 border-l-2 border-brand pl-4 bg-white/5 p-4 rounded-r-md">
                          <h4 class="text-brand text-xs font-bold uppercase tracking-widest mb-2">Endereço de Entrega</h4>
                          <div>
@@ -359,14 +343,13 @@
                          </div>
                     </div>
 
-                    <!-- Pagamento -->
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Forma de Pagamento</label>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="cursor-pointer group">
                                 <input type="radio" name="payment" value="Pix" class="peer sr-only" checked>
                                 <div class="border border-white/10 rounded p-3 text-center text-sm text-gray-400 peer-checked:bg-brand peer-checked:text-black peer-checked:border-brand transition-all font-bold hover:bg-white/5 group-hover:border-white/30">
-                                    PIX (5% OFF)
+                                    PIX
                                 </div>
                             </label>
                             <label class="cursor-pointer group relative" id="card-option">
@@ -374,7 +357,6 @@
                                 <div id="card-label" class="border border-white/10 rounded p-3 text-center text-sm text-gray-400 peer-checked:bg-brand peer-checked:text-black peer-checked:border-brand transition-all font-bold hover:bg-white/5 group-hover:border-white/30">
                                     Cartão de Crédito
                                 </div>
-                                <!-- Tooltip de Bloqueio -->
                                 <div id="card-disabled-tooltip" class="hidden absolute -top-8 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap z-50">
                                     Somente PIX para entrega
                                 </div>
@@ -382,7 +364,6 @@
                         </div>
                     </div>
 
-                    <!-- Resumo Rápido -->
                     <div class="bg-black/30 p-3 rounded border border-white/5 text-xs text-gray-400 flex justify-between">
                         <span>Total do Pedido:</span>
                         <span id="checkout-total-display" class="text-brand font-bold text-sm">R$ 0,00</span>
@@ -390,7 +371,7 @@
                 </div>
 
                 <div class="p-6 border-t border-white/5 bg-dark-900 sticky bottom-0 z-20">
-                    <button onclick="sendOrderToWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
+                    <button onclick="enviarPedidoWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
                         <span>Enviar Pedido</span>
                         <i data-lucide="message-circle" class="w-5 h-5"></i>
                     </button>
@@ -398,14 +379,14 @@
             </div>
         </div>
 
-        <!-- Carrinho de Compras -->
+        <!-- Modal do Carrinho de Compras -->
         <div id="cart-sidebar" class="fixed inset-0 z-[60] hidden">
-            <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="cart-overlay"></div>
+            <div onclick="alternarVisibilidadeCarrinho()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="cart-overlay"></div>
             <div id="cart-panel" class="absolute top-0 right-0 h-full w-full md:w-[450px] bg-dark-900 border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
                 
                 <div class="p-6 border-b border-white/5 flex items-center justify-between">
                     <h2 class="text-white text-xl font-black italic uppercase tracking-tighter">Seu Carrinho (<span id="cart-qty-header">0</span>)</h2>
-                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white p-2">
+                    <button onclick="alternarVisibilidadeCarrinho()" class="text-gray-400 hover:text-white p-2">
                         <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
@@ -421,16 +402,16 @@
                         <span class="text-gray-400 text-xs uppercase font-bold tracking-widest">Total Estimado</span>
                         <span id="cart-total" class="text-2xl text-brand font-black italic">R$ 0,00</span>
                     </div>
-                    <button onclick="toggleCheckout(true)" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
+                    <button onclick="alternarCheckout(true)" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase tracking-wider py-4 rounded-sm transition flex items-center justify-center gap-2">
                         Finalizar Compra <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Filtro em mobile -->
+        <!-- Modal do Filtro na Visualização Mobile -->
         <div id="mobile-filter-sidebar" class="fixed inset-0 z-[60] hidden">
-            <div onclick="toggleMobileFilters()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="filter-overlay"></div>
+            <div onclick="alternarFiltrosMobile()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0" id="filter-overlay"></div>
             
             <div id="filter-panel" class="absolute top-0 left-0 h-full w-[85%] max-w-[350px] bg-dark-900 border-r border-white/10 shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col">
                 
@@ -438,7 +419,7 @@
                     <h2 class="text-white text-xl font-black italic uppercase tracking-tighter flex items-center gap-2">
                         <i data-lucide="sliders-horizontal" class="w-5 h-5 text-brand"></i> Filtros
                     </h2>
-                    <button onclick="toggleMobileFilters()" class="text-gray-400 hover:text-white p-2">
+                    <button onclick="alternarFiltrosMobile()" class="text-gray-400 hover:text-white p-2">
                         <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
@@ -447,14 +428,13 @@
                     </div>
 
                 <div class="p-6 bg-dark-800 border-t border-white/5">
-                    <button onclick="toggleMobileFilters()" class="w-full bg-brand hover:bg-brand-hover text-black font-black uppercase tracking-wider py-4 rounded-sm transition">
+                    <button onclick="alternarFiltrosMobile()" class="w-full bg-brand hover:bg-brand-hover text-black font-black uppercase tracking-wider py-4 rounded-sm transition">
                         Ver Resultados
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- JavaScript -->
         <script>
             tailwind.config = {
                 theme: {
@@ -467,39 +447,80 @@
                 }
             }
 
-            // Loader & Scroll Lock Fix
             window.addEventListener('load', () => {
                 const loader = document.getElementById('page-loader');
                 setTimeout(() => { 
                     loader.classList.add('opacity-0', 'pointer-events-none'); 
-                    document.body.classList.remove('overflow-hidden'); // Destrava o scroll ao carregar
+                    document.body.classList.remove('overflow-hidden'); 
                 }, 300);
             });
 
-            // Dados
-            const products = [
-                { id: 601, brand: "Outlescky Lab", name: "Kit Urban Night", price: 899.90, images: ["https://images.unsplash.com/photo-1543322748-33df4d247597?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"], imageLabels: ["Look Completo", "T-Shirt"], category: "sets", subCategory: "Streetwear", sizes: ["P", "M", "G"], desc: "CONJUNTO COMPLETO URBAN NIGHT..." },
-                { id: 602, brand: "Nike Sport", name: "Summer Drill Kit", price: 649.90, images: ["https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2000&auto=format&fit=crop"], imageLabels: ["Look Completo"], category: "sets", subCategory: "Sport", sizes: ["M", "G", "GG"], desc: "KIT TREINO VERÃO..." },
-                { id: 1, brand: "Nike", name: "Air Jordan 1 High", price: 1299.90, image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "sneakers", subCategory: "Nike", sizes: ["39", "40", "41"], desc: "Clássico Jordan." },
-                { id: 2, brand: "Adidas", name: "Yeezy 350", price: 1899.90, image: "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "sneakers", subCategory: "Adidas", sizes: ["40", "42"], desc: "Conforto Boost." },
-                { id: 3, brand: "Vans", name: "Old Skool", price: 399.90, image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "sneakers", subCategory: "Vans", sizes: ["38", "39", "40"], desc: "Para skate." },
-                { id: 101, brand: "Outlescky", name: "Oversized Black", price: 129.90, image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Streetwear", sizes: ["P", "M", "G"], desc: "Algodão pesado." },
-                { id: 102, brand: "Stussy", name: "Graphic Tee", price: 189.90, image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Streetwear", sizes: ["M", "G"], desc: "Estampa exclusiva." },
-                { id: 103, brand: "Nike", name: "Dri-Fit Run", price: 149.90, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Sport", sizes: ["P", "M", "G", "GG"], desc: "Para performance." },
-                { id: 104, brand: "Zara", name: "Linho Casual", price: 229.90, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shirts", subCategory: "Casual", sizes: ["M", "G"], desc: "Elegância leve." },
-                { id: 201, brand: "Carhartt", name: "Cargo Olive", price: 349.90, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "pants", subCategory: "Streetwear", sizes: ["40", "42", "44"], desc: "Utilitária." },
-                { id: 202, brand: "Levi's", name: "Jeans 501", price: 299.90, image: "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "pants", subCategory: "Casual", sizes: ["38", "40", "42"], desc: "Clássico denim." },
-                { id: 203, brand: "Nike", name: "Jogger Tech", price: 449.90, image: "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "pants", subCategory: "Sport", sizes: ["P", "M", "G"], desc: "Conforto total." },
-                { id: 301, brand: "Nike", name: "Shorts Basket", price: 199.90, image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shorts", subCategory: "Sport", sizes: ["M", "G", "GG"], desc: "Para as quadras." },
-                { id: 302, brand: "H&M", name: "Shorts Chino", price: 149.90, image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "shorts", subCategory: "Casual", sizes: ["40", "42"], desc: "Verão essencial." },
-                { id: 401, brand: "Calvin Klein", name: "Boxer Pack 3", price: 159.90, image: "https://cdn.dooca.store/140181/products/e9ec6ba90bd900cdcad09e44c3c88edb_1067x1600.jpg?v=1717168343&webp=0", category: "underwear", subCategory: "Boxer", sizes: ["P", "M", "G"], desc: "Algodão premium." },
-                { id: 501, brand: "New Era", name: "NY Yankees", price: 199.90, image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "hats", subCategory: "Aba Curva", sizes: ["Único"], desc: "O clássico 9FORTY." },
-                { id: 502, brand: "Nike", name: "Heritage 86", price: 129.90, image: "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", category: "hats", subCategory: "Aba Curva", sizes: ["Único"], desc: "Swoosh frontal." }
+            const inventario = [
+                {
+                    id: 1,
+                    brand: "Nike",
+                    name: "Air Force 1 Low Triple Black",
+                    price: 899.90,
+                    image: "https://cdn.jsdelivr.net/gh/CauanO/Outlescky-fotos@main/tenis nike 1.jpg",
+                    category: "sneakers",
+                    subCategory: "Nike",
+                    sizes: ["38", "39", "40", "41", "42", "43"],
+                    desc: "Nike Air Force 1 Low totalmente preto (Triple Black), visual clean e versátil, ideal para uso diário com conforto e durabilidade."
+                },
+                {
+                    id: 101,
+                    brand: "Outlescky",
+                    name: "Oversized Angel Black",
+                    price: 129.90,
+                    images: [
+                        "https://cdn.jsdelivr.net/gh/CauanO/Outlescky-fotos@main/camisa 1 frente.jpg",
+                        "https://cdn.jsdelivr.net/gh/CauanO/Outlescky-fotos@main/camisa 1 atras.jpg"
+                    ],
+                    category: "shirts",
+                    subCategory: "Streetwear",
+                    sizes: ["P", "M", "G"],
+                    desc: "Camisa oversized preta Outlescky com zíper frontal, modelagem ampla e estampa angelical nas costas. Confeccionada em algodão pesado, unindo conforto, presença e identidade street premium."
+                },
+                {
+                    id: 201,
+                    brand: "Carhartt",
+                    name: "Slim Chino Khaki",
+                    price: 349.90,
+                    image: "https://cdn.jsdelivr.net/gh/CauanO/Outlescky-fotos@main/cal%C3%A7a%201.jpg",
+                    category: "pants",
+                    subCategory: "Streetwear",
+                    sizes: ["40", "42", "44"],
+                    desc: "Calça chino Carhartt em tom khaki, modelagem slim, visual urbano e versátil. Ideal para compor looks casuais ou streetwear com elegância e conforto."
+                },
+                {
+                    id: 301,
+                    brand: "Nike",
+                    name: "Mesh Basketball White",
+                    price: 199.90,
+                    image: "https://cdn.jsdelivr.net/gh/CauanO/Outlescky-fotos@main/short%201.jpg",
+                    category: "shorts",
+                    subCategory: "Sport",
+                    sizes: ["M", "G", "GG"],
+                    desc: "Short Nike estilo basketball em tecido mesh respirável, cor branca com detalhes contrastantes. Ideal para quadra, treinos ou composições street sport com conforto e mobilidade."
+                },
+                {
+                    id: 401,
+                    brand: "Totanka Club",
+                    name: "Totanka Club Summer Set",
+                    price: 649.90,
+                    images: [
+                        "https://cdn.jsdelivr.net/gh/CauanO/Outlescky-fotos@main/conjunto 1.jpg"
+                    ],
+                    category: "sets",
+                    subCategory: "Casual Premium",
+                    sizes: ["M", "G", "GG"],
+                    desc: "Conjunto casual premium Totanka Club, composto por camiseta branca estampada e short azul claro. Visual clean e sofisticado, ideal para ocasiões informais, viagens e momentos de lazer."
+                }
             ];
 
-            const filtersConfig = {
-                sets: { options: ["Streetwear", "Casual", "Sport"], sizes: ["P", "M", "G", "GG"], title: "Estilo do Kit" },
-                sneakers: { options: ["Nike", "Adidas", "Vans", "New Balance"], sizes: ["38", "39", "40", "41", "42"], title: "Marcas" },
+            const configuracaoFiltros = {
+                sets: { options: ["Streetwear", "Casual Premium", "Sport"], sizes: ["P", "M", "G", "GG"], title: "Estilo do Kit" },
+                sneakers: { options: ["Nike", "Adidas", "Vans", "New Balance"], sizes: ["38", "39", "40", "41", "42", "43"], title: "Marcas" },
                 shirts: { options: ["Streetwear", "Sport", "Casual"], sizes: ["P", "M", "G", "GG"], title: "Estilo" },
                 pants: { options: ["Streetwear", "Casual", "Sport"], sizes: ["38", "40", "42", "44"], title: "Estilo" },
                 shorts: { options: ["Sport", "Casual"], sizes: ["P", "M", "G", "GG", "40", "42"], title: "Estilo" },
@@ -507,511 +528,488 @@
                 hats: { options: ["Aba Curva", "Aba Reta", "Bucket"], sizes: ["Único"], title: "Modelo" }
             };
 
-            let state = {
-                currentView: 'categories',
-                currentCategory: null,
-                activeSubCategories: [],
-                activeSizes: [],
-                maxPrice: 2000,
-                cart: JSON.parse(localStorage.getItem('outlescky_cart')) || [], // Carrega do LocalStorage
-                currentProductId: null,
-                detailSelectedSize: null,
-                currentImageIndex: 0,
-                currentProductImages: []
+            let estado = {
+                visualizacaoAtual: 'categories',
+                categoriaAtual: null,
+                subCategoriasAtivas: [],
+                tamanhosAtivos: [],
+                precoMaximo: 2000,
+                carrinho: JSON.parse(localStorage.getItem('outlescky_cart')) || [],
+                idProdutoAtual: null,
+                tamanhoSelecionadoDetalhe: null,
+                indiceImagemAtual: 0,
+                imagensProdutoAtual: []
             };
 
-            // Atualiza UI do carrinho ao carregar se tiver itens
-            if(state.cart.length > 0) updateCartCount();
+            if(estado.carrinho.length > 0) atualizarContadorCarrinho();
 
-            // --- VIEW NAVIGATION ---
-            function showSection(sectionId) {
-                state.currentView = sectionId === 'categories' ? 'categories' : state.currentView;
+            function alternarSecao(idSecao) {
+                estado.visualizacaoAtual = idSecao === 'categories' ? 'categories' : estado.visualizacaoAtual;
                 ['categories-view', 'grid-view', 'details-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
-                const section = document.getElementById(sectionId + '-view');
-                section.classList.remove('hidden');
-                section.classList.remove('fade-in');
-                void section.offsetWidth;
-                section.classList.add('fade-in');
-                updateBreadcrumbs();
+                const secao = document.getElementById(idSecao + '-view');
+                secao.classList.remove('hidden');
+                secao.classList.remove('fade-in');
+                void secao.offsetWidth;
+                secao.classList.add('fade-in');
+                atualizarNavegacao();
                 window.scrollTo(0, 0);
             }
 
-            function updateBreadcrumbs(productName = '') {
-                const els = { sep1: document.getElementById('breadcrumb-separator-1'), cat: document.getElementById('breadcrumb-category'), sep2: document.getElementById('breadcrumb-separator-2'), prod: document.getElementById('breadcrumb-product') };
-                Object.values(els).forEach(el => el.classList.add('hidden'));
-                if (state.currentView === 'categories') return;
-                els.sep1.classList.remove('hidden');
-                els.cat.classList.remove('hidden');
-                const catNames = { sets: 'Conjuntos', sneakers: 'Tênis', shirts: 'Camisas', pants: 'Calças', shorts: 'Shorts', underwear: 'Cuecas', hats: 'Bonés' };
-                els.cat.innerText = catNames[state.currentCategory] || 'Categoria';
-                if (state.currentView === 'details') {
-                    els.sep2.classList.remove('hidden');
-                    els.prod.classList.remove('hidden');
-                    els.prod.innerText = productName;
+            function atualizarNavegacao(nomeProduto = '') {
+                const elementos = { sep1: document.getElementById('breadcrumb-separator-1'), cat: document.getElementById('breadcrumb-category'), sep2: document.getElementById('breadcrumb-separator-2'), prod: document.getElementById('breadcrumb-product') };
+                Object.values(elementos).forEach(el => el.classList.add('hidden'));
+                if (estado.visualizacaoAtual === 'categories') return;
+                elementos.sep1.classList.remove('hidden');
+                elementos.cat.classList.remove('hidden');
+                const nomesCategorias = { sets: 'Conjuntos', sneakers: 'Tênis', shirts: 'Camisas', pants: 'Calças', shorts: 'Shorts', underwear: 'Cuecas', hats: 'Bonés' };
+                elementos.cat.innerText = nomesCategorias[estado.categoriaAtual] || 'Categoria';
+                if (estado.visualizacaoAtual === 'details') {
+                    elementos.sep2.classList.remove('hidden');
+                    elementos.prod.classList.remove('hidden');
+                    elementos.prod.innerText = nomeProduto;
                 }
             }
 
-            function backToGrid() {
-                if (state.currentCategory) loadCategory(state.currentCategory);
-                else showSection('categories');
+            function voltarParaGrade() {
+                if (estado.categoriaAtual) carregarCategoria(estado.categoriaAtual);
+                else alternarSecao('categories');
             }
 
-            // --- CATEGORY LOADING ---
-            function loadCategory(category) {
-                state.currentCategory = category;
-                state.currentView = 'grid';
-                state.activeSubCategories = [];
-                state.activeSizes = [];
-                state.maxPrice = 2000;
-                document.getElementById('category-title').innerText = category === 'sets' ? 'Conjuntos Completos' : 'Produtos';
-                renderFilters(category);
-                filterAndRenderProducts();
-                showSection('grid');
+            function carregarCategoria(categoria) {
+                estado.categoriaAtual = categoria;
+                estado.visualizacaoAtual = 'grid';
+                estado.subCategoriasAtivas = [];
+                estado.tamanhosAtivos = [];
+                estado.precoMaximo = 2000;
+                document.getElementById('category-title').innerText = categoria === 'sets' ? 'Conjuntos Completos' : 'Produtos';
+                montarFiltros(categoria);
+                filtrarERenderizar();
+                alternarSecao('grid');
             }
 
-            function renderFilters(category) {
-                const config = filtersConfig[category];
+            function montarFiltros(categoria) {
+                const config = configuracaoFiltros[categoria];
                 const container = document.getElementById('filters-container');
-                const mobileContainer = document.getElementById('mobile-filters-content');
+                const containerMobile = document.getElementById('mobile-filters-content');
                 if (!config) return;
                 
-                let html = `<div><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">${config.title}</h4><ul class="space-y-3 text-sm text-gray-400">`;
-                config.options.forEach(option => {
-                    const count = products.filter(p => p.category === category && p.subCategory === option).length;
-                    const isChecked = state.activeSubCategories.includes(option) ? 'checked' : '';
-                    html += `<li class="flex items-center gap-3 hover:text-white cursor-pointer group">
-                        <input type="checkbox" value="${option}" onchange="toggleSubCat('${option}')" ${isChecked} class="custom-checkbox w-4 h-4 rounded bg-transparent border-gray-600 checked:bg-brand transition cursor-pointer">
-                        <span class="group-hover:translate-x-1 transition-transform">${option} <span class="text-gray-600 text-xs">(${count})</span></span>
+                let markup = `<div><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">${config.title}</h4><ul class="space-y-3 text-sm text-gray-400">`;
+                config.options.forEach(opcao => {
+                    const contagem = inventario.filter(p => p.category === categoria && p.subCategory === opcao).length;
+                    const checado = estado.subCategoriasAtivas.includes(opcao) ? 'checked' : '';
+                    markup += `<li class="flex items-center gap-3 hover:text-white cursor-pointer group">
+                        <input type="checkbox" value="${opcao}" onchange="alternarSubcategoria('${opcao}')" ${checado} class="custom-checkbox w-4 h-4 rounded bg-transparent border-gray-600 checked:bg-brand transition cursor-pointer">
+                        <span class="group-hover:translate-x-1 transition-transform">${opcao} <span class="text-gray-600 text-xs">(${contagem})</span></span>
                     </li>`;
                 });
-                html += `</ul></div><div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tamanho</h4><div class="grid grid-cols-4 gap-2">`;
-                config.sizes.forEach(size => {
-                    const isActive = state.activeSizes.includes(size);
-                    const activeClass = isActive ? 'bg-brand text-black border-brand' : 'border-white/20 text-gray-400 hover:border-brand hover:text-brand';
-                    html += `<button onclick="toggleSizeFilter('${size}', this)" class="h-8 border text-xs font-bold rounded-sm transition ${activeClass}">${size}</button>`;
+                markup += `</ul></div><div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tamanho</h4><div class="grid grid-cols-4 gap-2">`;
+                config.sizes.forEach(tamanho => {
+                    const ativo = estado.tamanhosAtivos.includes(tamanho);
+                    const classeAtiva = ativo ? 'bg-brand text-black border-brand' : 'border-white/20 text-gray-400 hover:border-brand hover:text-brand';
+                    markup += `<button onclick="alternarFiltroTamanho('${tamanho}', this)" class="h-8 border text-xs font-bold rounded-sm transition ${classeAtiva}">${tamanho}</button>`;
                 });
-                html += `</div></div><div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Preço Máximo</h4>
-                    <div class="flex justify-between text-xs text-gray-400 mb-2"><span>R$ 0</span><span class="price-val-display">R$ ${state.maxPrice}</span></div>
-                    <input type="range" min="0" max="2000" step="50" value="${state.maxPrice}" oninput="updatePrice(this.value)" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                markup += `</div></div><div class="mt-8 border-t border-white/10 pt-6"><h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Preço Máximo</h4>
+                    <div class="flex justify-between text-xs text-gray-400 mb-2"><span>R$ 0</span><span class="price-val-display">R$ ${estado.precoMaximo}</span></div>
+                    <input type="range" min="0" max="2000" step="50" value="${estado.precoMaximo}" oninput="atualizarPreco(this.value)" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
                 </div>`;
                 
-                if (container) container.innerHTML = html;
-                if (mobileContainer) mobileContainer.innerHTML = html;
+                if (container) container.innerHTML = markup;
+                if (containerMobile) containerMobile.innerHTML = markup;
             }
 
-            function toggleSubCat(val) {
-                if (state.activeSubCategories.includes(val)) state.activeSubCategories = state.activeSubCategories.filter(x => x !== val);
-                else state.activeSubCategories.push(val);
-                renderFilters(state.currentCategory);
-                filterAndRenderProducts();
+            function alternarSubcategoria(valor) {
+                if (estado.subCategoriasAtivas.includes(valor)) estado.subCategoriasAtivas = estado.subCategoriasAtivas.filter(x => x !== valor);
+                else estado.subCategoriasAtivas.push(valor);
+                montarFiltros(estado.categoriaAtual);
+                filtrarERenderizar();
             }
 
-            function toggleSizeFilter(val) {
-                if (state.activeSizes.includes(val)) state.activeSizes = state.activeSizes.filter(x => x !== val);
-                else state.activeSizes.push(val);
-                renderFilters(state.currentCategory);
-                filterAndRenderProducts();
+            function alternarFiltroTamanho(valor) {
+                if (estado.tamanhosAtivos.includes(valor)) estado.tamanhosAtivos = estado.tamanhosAtivos.filter(x => x !== valor);
+                else estado.tamanhosAtivos.push(valor);
+                montarFiltros(estado.categoriaAtual);
+                filtrarERenderizar();
             }
 
-            function updatePrice(val) {
-                state.maxPrice = parseInt(val);
-                document.querySelectorAll('.price-val-display').forEach(el => el.innerText = `R$ ${val}`);
-                document.querySelectorAll('input[type="range"]').forEach(input => input.value = val);
-                filterAndRenderProducts();
+            function atualizarPreco(valor) {
+                estado.precoMaximo = parseInt(valor);
+                document.querySelectorAll('.price-val-display').forEach(el => el.innerText = `R$ ${valor}`);
+                document.querySelectorAll('input[type="range"]').forEach(input => input.value = valor);
+                filtrarERenderizar();
             }
 
-            function clearFilters() {
-                state.activeSubCategories = [];
-                state.activeSizes = [];
-                state.maxPrice = 2000;
-                loadCategory(state.currentCategory);
+            function limparFiltros() {
+                estado.subCategoriasAtivas = [];
+                estado.tamanhosAtivos = [];
+                estado.precoMaximo = 2000;
+                carregarCategoria(estado.categoriaAtual);
             }
 
-            function filterAndRenderProducts() {
+            function filtrarERenderizar() {
                 const container = document.getElementById('products-container');
-                const emptyState = document.getElementById('empty-state');
+                const estadoVazio = document.getElementById('empty-state');
                 container.innerHTML = '';
-                const filtered = products.filter(p => {
-                    if (p.category !== state.currentCategory) return false;
-                    if (state.activeSubCategories.length > 0 && !state.activeSubCategories.includes(p.subCategory)) return false;
-                    if (p.price > state.maxPrice) return false;
-                    if (state.activeSizes.length > 0) {
-                        return p.sizes.some(s => state.activeSizes.includes(s));
+                const filtrados = inventario.filter(p => {
+                    if (p.category !== estado.categoriaAtual) return false;
+                    if (estado.subCategoriasAtivas.length > 0 && !estado.subCategoriasAtivas.includes(p.subCategory)) return false;
+                    if (p.price > estado.precoMaximo) return false;
+                    if (estado.tamanhosAtivos.length > 0) {
+                        return p.sizes.some(s => estado.tamanhosAtivos.includes(s));
                     }
                     return true;
                 });
-                if (filtered.length === 0) {
+                if (filtrados.length === 0) {
                     container.classList.add('hidden');
-                    emptyState.classList.remove('hidden');
+                    estadoVazio.classList.remove('hidden');
                 } else {
                     container.classList.remove('hidden');
-                    emptyState.classList.add('hidden');
-                    filtered.forEach(p => container.appendChild(createProductCard(p)));
+                    estadoVazio.classList.add('hidden');
+                    filtrados.forEach(p => container.appendChild(criarCardProduto(p)));
                 }
-                document.getElementById('product-count').innerText = `${filtered.length} produtos`;
+                document.getElementById('product-count').innerText = `${filtrados.length} produtos`;
                 lucide.createIcons();
             }
 
-            function createProductCard(product) {
-                const article = document.createElement('article');
-                article.className = "group cursor-pointer animate-[fadeIn_0.5s_ease-out]";
-                article.onclick = () => loadProductDetails(product.id);
-                const imgSrc = Array.isArray(product.images) ? product.images[0] : product.image;
-                article.innerHTML = `<div class="relative aspect-[4/5] bg-dark-800 mb-3 overflow-hidden rounded-sm border border-transparent group-hover:border-white/10 transition-colors">
-                    <img src="${imgSrc}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out">
+            function criarCardProduto(produto) {
+                const artigo = document.createElement('article');
+                artigo.className = "group cursor-pointer animate-[fadeIn_0.5s_ease-out]";
+                artigo.onclick = () => carregarDetalhesProduto(produto.id);
+                const fonteImg = Array.isArray(produto.images) ? produto.images[0] : produto.image;
+                artigo.innerHTML = `<div class="relative aspect-[4/5] bg-dark-800 mb-3 overflow-hidden rounded-sm border border-transparent group-hover:border-white/10 transition-colors">
+                    <img src="${fonteImg}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out">
                     <div class="absolute bottom-0 w-full bg-white text-black font-bold py-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-center justify-center gap-2 text-xs uppercase tracking-wider z-20">Ver <i data-lucide="eye" class="w-3 h-3"></i></div>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <p class="text-gray-500 text-[10px] uppercase font-bold tracking-wider">${product.subCategory}</p>
-                    <h3 class="text-white font-bold text-sm leading-tight group-hover:text-brand transition-colors line-clamp-1">${product.name}</h3>
-                    <div class="mt-1 font-bold text-white">R$ ${product.price.toFixed(2)}</div>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold tracking-wider">${produto.subCategory}</p>
+                    <h3 class="text-white font-bold text-sm leading-tight group-hover:text-brand transition-colors line-clamp-1">${produto.name}</h3>
+                    <div class="mt-1 font-bold text-white">R$ ${produto.price.toFixed(2)}</div>
                 </div>`;
-                return article;
+                return artigo;
             }
 
-            // --- DETAILS ---
-            function loadProductDetails(id) {
-                const product = products.find(p => p.id === id);
-                if (!product) return;
-                state.currentProductId = product.id;
-                state.detailSelectedSize = null; // Reset selection mandatory
-                state.currentView = 'details';
-                showSection('details');
-                updateBreadcrumbs(product.name);
+            function carregarDetalhesProduto(id) {
+                const produto = inventario.find(p => p.id === id);
+                if (!produto) return;
+                estado.idProdutoAtual = produto.id;
+                estado.tamanhoSelecionadoDetalhe = null; 
+                estado.visualizacaoAtual = 'details';
+                alternarSecao('details');
+                atualizarNavegacao(produto.name);
                 
-                // Carousel Logic
-                if (Array.isArray(product.images) && product.images.length > 1) {
-                    state.currentProductImages = product.images;
-                    state.currentProductLabels = product.imageLabels || [];
-                    state.currentImageIndex = 0;
+                if (Array.isArray(produto.images) && produto.images.length > 1) {
+                    estado.imagensProdutoAtual = produto.images;
+                    estado.rotulosProdutoAtual = produto.imageLabels || [];
+                    estado.indiceImagemAtual = 0;
                     document.getElementById('carousel-controls').classList.remove('hidden');
-                    updateDetailImageDisplay();
+                    atualizarImagemDetalhe();
                 } else {
-                    state.currentProductImages = [];
+                    estado.imagensProdutoAtual = [];
                     document.getElementById('carousel-controls').classList.add('hidden');
-                    document.getElementById('detail-image').src = Array.isArray(product.images) ? product.images[0] : product.image;
+                    document.getElementById('detail-image').src = Array.isArray(produto.images) ? produto.images[0] : produto.image;
                 }
 
-                document.getElementById('detail-brand').innerText = product.brand;
-                document.getElementById('detail-title').innerText = product.name;
-                document.getElementById('detail-price').innerText = `R$ ${product.price.toFixed(2)}`;
-                document.getElementById('detail-desc').innerText = product.desc;
-                renderSizeSelector(product.sizes);
+                document.getElementById('detail-brand').innerText = produto.brand;
+                document.getElementById('detail-title').innerText = produto.name;
+                document.getElementById('detail-price').innerText = `R$ ${produto.price.toFixed(2)}`;
+                document.getElementById('detail-desc').innerText = produto.desc;
+                montarSeletorTamanho(produto.sizes);
                 
-                // Reset error message
                 document.getElementById('size-error').classList.add('hidden');
             }
 
-            function renderSizeSelector(sizes) {
-                const sizeContainer = document.getElementById('size-selector');
-                sizeContainer.innerHTML = '';
-                sizes.forEach(size => {
+            function montarSeletorTamanho(tamanhos) {
+                const containerTamanho = document.getElementById('size-selector');
+                containerTamanho.innerHTML = '';
+                tamanhos.forEach(tamanho => {
                     const btn = document.createElement('button');
-                    const isSelected = state.detailSelectedSize === size;
-                    btn.className = `w-10 h-10 border text-sm font-bold transition flex items-center justify-center rounded-sm ${isSelected ? 'bg-brand text-black border-brand' : 'border-white/20 text-gray-400 hover:border-brand hover:text-brand'}`;
-                    btn.innerText = size;
-                    btn.onclick = () => selectDetailSize(size);
-                    sizeContainer.appendChild(btn);
+                    const estaSelecionado = estado.tamanhoSelecionadoDetalhe === tamanho;
+                    btn.className = `w-10 h-10 border text-sm font-bold transition flex items-center justify-center rounded-sm ${estaSelecionado ? 'bg-brand text-black border-brand' : 'border-white/20 text-gray-400 hover:border-brand hover:text-brand'}`;
+                    btn.innerText = tamanho;
+                    btn.onclick = () => selecionarTamanho(tamanho);
+                    containerTamanho.appendChild(btn);
                 });
             }
 
-            function selectDetailSize(size) {
-                state.detailSelectedSize = size;
+            function selecionarTamanho(tamanho) {
+                estado.tamanhoSelecionadoDetalhe = tamanho;
                 document.getElementById('size-error').classList.add('hidden');
-                const product = products.find(p => p.id === state.currentProductId);
-                renderSizeSelector(product.sizes);
+                const produto = inventario.find(p => p.id === estado.idProdutoAtual);
+                montarSeletorTamanho(produto.sizes);
             }
 
-            function updateDetailImageDisplay() {
-                const imgEl = document.getElementById('detail-image');
-                const counterEl = document.getElementById('image-counter');
-                const labelContainer = document.getElementById('item-label');
-                imgEl.src = state.currentProductImages[state.currentImageIndex];
-                counterEl.innerText = `${state.currentImageIndex + 1} / ${state.currentProductImages.length}`;
+            function atualizarImagemDetalhe() {
+                const imgElemento = document.getElementById('detail-image');
+                const contadorElemento = document.getElementById('image-counter');
+                const containerRotulo = document.getElementById('item-label');
+                imgElemento.src = estado.imagensProdutoAtual[estado.indiceImagemAtual];
+                contadorElemento.innerText = `${estado.indiceImagemAtual + 1} / ${estado.imagensProdutoAtual.length}`;
                 
-                if (state.currentProductLabels[state.currentImageIndex]) {
-                    labelContainer.querySelector('span').innerText = state.currentProductLabels[state.currentImageIndex];
-                    labelContainer.classList.remove('opacity-0');
+                if (estado.rotulosProdutoAtual[estado.indiceImagemAtual]) {
+                    containerRotulo.querySelector('span').innerText = estado.rotulosProdutoAtual[estado.indiceImagemAtual];
+                    containerRotulo.classList.remove('opacity-0');
                 } else {
-                    labelContainer.classList.add('opacity-0');
+                    containerRotulo.classList.add('opacity-0');
                 }
             }
 
-            function nextImage() {
-                if (state.currentProductImages.length <= 1) return;
-                state.currentImageIndex = (state.currentImageIndex + 1) % state.currentProductImages.length;
-                updateDetailImageDisplay();
+            function proximaImagem() {
+                if (estado.imagensProdutoAtual.length <= 1) return;
+                estado.indiceImagemAtual = (estado.indiceImagemAtual + 1) % estado.imagensProdutoAtual.length;
+                atualizarImagemDetalhe();
             }
 
-            function prevImage() {
-                if (state.currentProductImages.length <= 1) return;
-                state.currentImageIndex = (state.currentImageIndex - 1 + state.currentProductImages.length) % state.currentProductImages.length;
-                updateDetailImageDisplay();
+            function imagemAnterior() {
+                if (estado.imagensProdutoAtual.length <= 1) return;
+                estado.indiceImagemAtual = (estado.indiceImagemAtual - 1 + estado.imagensProdutoAtual.length) % estado.imagensProdutoAtual.length;
+                atualizarImagemDetalhe();
             }
 
-            // --- CART ---
-            function toggleCart() {
+            function alternarVisibilidadeCarrinho() {
                 const sidebar = document.getElementById('cart-sidebar');
                 const overlay = document.getElementById('cart-overlay');
-                const panel = document.getElementById('cart-panel');
+                const painel = document.getElementById('cart-panel');
                 
                 if (sidebar.classList.contains('hidden')) {
                     sidebar.classList.remove('hidden');
-                    // Lock Body Scroll
+                    
                     document.body.classList.add('overflow-hidden');
                     setTimeout(() => {
                         overlay.classList.remove('opacity-0');
-                        panel.classList.remove('translate-x-full');
+                        painel.classList.remove('translate-x-full');
                     }, 10);
                 } else {
                     overlay.classList.add('opacity-0');
-                    panel.classList.add('translate-x-full');
+                    painel.classList.add('translate-x-full');
                     document.body.classList.remove('overflow-hidden');
                     setTimeout(() => {
                         sidebar.classList.add('hidden');
                     }, 300);
                 }
                 
-                // Se fechou, garante renderizar itens
-                if (!sidebar.classList.contains('hidden')) renderCart();
+                if (!sidebar.classList.contains('hidden')) renderizarCarrinho();
             }
 
-            function addToCartDetailed() {
-                const product = products.find(p => p.id === state.currentProductId);
-                if (!product) return;
+            function adicionarProdutoAoCarrinho() {
+                const produto = inventario.find(p => p.id === estado.idProdutoAtual);
+                if (!produto) return;
 
-                // VALIDATION: Size Required
-                if (!state.detailSelectedSize) {
-                    const errorMsg = document.getElementById('size-error');
-                    errorMsg.classList.remove('hidden');
+                if (!estado.tamanhoSelecionadoDetalhe) {
+                    const msgErro = document.getElementById('size-error');
+                    msgErro.classList.remove('hidden');
                     return;
                 }
 
-                state.cart.push({
+                estado.carrinho.push({
                     cartId: Date.now(),
-                    productId: product.id,
-                    name: product.name,
-                    price: product.price,
-                    size: state.detailSelectedSize,
-                    image: Array.isArray(product.images) ? product.images[0] : product.image,
-                    subCategory: product.subCategory
+                    productId: produto.id,
+                    name: produto.name,
+                    price: produto.price,
+                    size: estado.tamanhoSelecionadoDetalhe,
+                    image: Array.isArray(produto.images) ? produto.images[0] : produto.image,
+                    subCategory: produto.subCategory
                 });
 
-                // Save to LocalStorage
-                localStorage.setItem('outlescky_cart', JSON.stringify(state.cart));
+                localStorage.setItem('outlescky_cart', JSON.stringify(estado.carrinho));
 
-                updateCartCount();
-                renderCart();
-                showToast();
-                toggleCart(); // Abre o carrinho
+                atualizarContadorCarrinho();
+                renderizarCarrinho();
+                exibirNotificacao();
+                alternarVisibilidadeCarrinho(); 
             }
 
-            function removeFromCart(cartId) {
-                state.cart = state.cart.filter(item => item.cartId !== cartId);
-                localStorage.setItem('outlescky_cart', JSON.stringify(state.cart));
-                updateCartCount();
-                renderCart();
+            function removerDoCarrinho(idItemCarrinho) {
+                estado.carrinho = estado.carrinho.filter(item => item.cartId !== idItemCarrinho);
+                localStorage.setItem('outlescky_cart', JSON.stringify(estado.carrinho));
+                atualizarContadorCarrinho();
+                renderizarCarrinho();
             }
 
-            function updateCartCount() {
-                const count = state.cart.length;
+            function atualizarContadorCarrinho() {
+                const contagem = estado.carrinho.length;
                 const badge = document.getElementById('cart-count');
-                const headerCount = document.getElementById('cart-qty-header');
-                if(headerCount) headerCount.innerText = count;
+                const cabecalhoContagem = document.getElementById('cart-qty-header');
+                if(cabecalhoContagem) cabecalhoContagem.innerText = contagem;
                 
-                badge.innerText = count;
-                badge.classList.remove('transform', 'scale-110'); // Reset animation
-                void badge.offsetWidth; // Trigger reflow
+                badge.innerText = contagem;
+                badge.classList.remove('transform', 'scale-110'); 
+                void badge.offsetWidth; 
                 
-                if (count > 0) {
+                if (contagem > 0) {
                     badge.classList.remove('opacity-0');
-                    badge.classList.add('scale-110'); // Pulse animation
+                    badge.classList.add('scale-110'); 
                     setTimeout(() => badge.classList.remove('scale-110'), 200);
                 } else {
                     badge.classList.add('opacity-0');
                 }
             }
 
-            function renderCart() {
+            function renderizarCarrinho() {
                 const container = document.getElementById('cart-items-container');
-                const totalEl = document.getElementById('cart-total');
+                const elementoTotal = document.getElementById('cart-total');
                 
-                if (state.cart.length === 0) {
-                    container.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-500 gap-4 mt-20"><i data-lucide="shopping-bag" class="w-12 h-12 opacity-20"></i><p class="text-sm font-medium">Seu carrinho está vazio.</p><button onclick="toggleCart()" class="text-brand text-xs font-bold uppercase hover:underline">Continuar Comprando</button></div>`;
-                    totalEl.innerText = "R$ 0,00";
+                if (estado.carrinho.length === 0) {
+                    container.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-500 gap-4 mt-20"><i data-lucide="shopping-bag" class="w-12 h-12 opacity-20"></i><p class="text-sm font-medium">Seu carrinho está vazio.</p><button onclick="alternarVisibilidadeCarrinho()" class="text-brand text-xs font-bold uppercase hover:underline">Continuar Comprando</button></div>`;
+                    elementoTotal.innerText = "R$ 0,00";
                 } else {
-                    let html = '';
+                    let markup = '';
                     let total = 0;
-                    state.cart.forEach(item => {
+                    estado.carrinho.forEach(item => {
                         total += item.price;
-                        html += `<div class="flex gap-4 animate-[fadeIn_0.3s_ease-out] border-b border-white/5 pb-4 last:border-0"><div class="w-20 h-24 bg-dark-800 rounded-sm overflow-hidden flex-shrink-0"><img src="${item.image}" class="w-full h-full object-cover"></div><div class="flex-1 flex flex-col justify-between py-1"><div><h4 class="text-white text-sm font-bold leading-tight line-clamp-2 mb-1">${item.name}</h4><p class="text-gray-500 text-xs font-medium uppercase tracking-wider">${item.subCategory} • Tam: <span class="text-gray-300">${item.size}</span></p></div><div class="flex justify-between items-center"><span class="text-brand font-bold text-sm">R$ ${item.price.toFixed(2)}</span><button onclick="removeFromCart(${item.cartId})" class="text-gray-600 hover:text-red-500 transition p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div></div>`;
+                        markup += `<div class="flex gap-4 animate-[fadeIn_0.3s_ease-out] border-b border-white/5 pb-4 last:border-0"><div class="w-20 h-24 bg-dark-800 rounded-sm overflow-hidden flex-shrink-0"><img src="${item.image}" class="w-full h-full object-cover"></div><div class="flex-1 flex flex-col justify-between py-1"><div><h4 class="text-white text-sm font-bold leading-tight line-clamp-2 mb-1">${item.name}</h4><p class="text-gray-500 text-xs font-medium uppercase tracking-wider">${item.subCategory} • Tam: <span class="text-gray-300">${item.size}</span></p></div><div class="flex justify-between items-center"><span class="text-brand font-bold text-sm">R$ ${item.price.toFixed(2)}</span><button onclick="removerDoCarrinho(${item.cartId})" class="text-gray-600 hover:text-red-500 transition p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div></div>`;
                     });
-                    container.innerHTML = html;
-                    totalEl.innerText = `R$ ${total.toFixed(2)}`;
+                    container.innerHTML = markup;
+                    elementoTotal.innerText = `R$ ${total.toFixed(2)}`;
                 }
                 lucide.createIcons();
             }
 
-            function showToast() {
+            function exibirNotificacao() {
                 const toast = document.getElementById('toast');
                 toast.classList.remove('translate-y-40', 'opacity-0');
                 setTimeout(() => { toast.classList.add('translate-y-40', 'opacity-0'); }, 3000);
             }
 
-            // --- CHECKOUT ---
-            function toggleCheckout(show) {
+            function alternarCheckout(mostrar) {
                 const modal = document.getElementById('checkout-modal');
-                if (show) {
-                    let total = state.cart.reduce((acc, item) => acc + item.price, 0);
+                if (mostrar) {
+                    let total = estado.carrinho.reduce((acc, item) => acc + item.price, 0);
                     document.getElementById('checkout-total-display').innerText = `R$ ${total.toFixed(2)}`;
                     
-                    // Fecha carrinho, abre modal e trava scroll
                     document.getElementById('cart-sidebar').classList.add('hidden');
                     document.getElementById('cart-overlay').classList.add('opacity-0');
                     document.getElementById('cart-panel').classList.add('translate-x-full');
                     
                     modal.classList.remove('hidden');
                     document.body.classList.add('overflow-hidden');
-                    toggleDeliveryFields(); 
+                    alternarCamposEntrega(); 
                 } else {
                     modal.classList.add('hidden');
                     document.body.classList.remove('overflow-hidden');
                 }
             }
 
-            function toggleDeliveryFields() {
-                const deliverySelect = document.getElementById('cust-delivery');
-                const addressFields = document.getElementById('address-fields');
-                const cardOption = document.getElementById('card-option');
-                const cardInput = cardOption.querySelector('input');
-                const pixInput = document.querySelector('input[value="Pix"]');
-                const cardLabel = document.getElementById('card-label');
+            function alternarCamposEntrega() {
+                const seletorEntrega = document.getElementById('cust-delivery');
+                const camposEndereco = document.getElementById('address-fields');
+                const opcaoCartao = document.getElementById('card-option');
+                const inputCartao = opcaoCartao.querySelector('input');
+                const inputPix = document.querySelector('input[value="Pix"]');
+                const rotuloCartao = document.getElementById('card-label');
                 const tooltip = document.getElementById('card-disabled-tooltip');
 
-                if (deliverySelect.value === 'Entrega') {
-                    addressFields.classList.remove('hidden');
-                    // Bloqueia Cartão
-                    cardInput.disabled = true;
-                    cardLabel.classList.add('opacity-50', 'cursor-not-allowed');
-                    cardOption.classList.remove('cursor-pointer');
-                    cardOption.classList.add('cursor-not-allowed');
+                if (seletorEntrega.value === 'Entrega') {
+                    camposEndereco.classList.remove('hidden');
+                    inputCartao.disabled = true;
+                    rotuloCartao.classList.add('opacity-50', 'cursor-not-allowed');
+                    opcaoCartao.classList.remove('cursor-pointer');
+                    opcaoCartao.classList.add('cursor-not-allowed');
                     tooltip.classList.remove('hidden');
-                    pixInput.checked = true;
+                    inputPix.checked = true;
                 } else {
-                    addressFields.classList.add('hidden');
-                    // Libera Cartão
-                    cardInput.disabled = false;
-                    cardLabel.classList.remove('opacity-50', 'cursor-not-allowed');
-                    cardOption.classList.add('cursor-pointer');
-                    cardOption.classList.remove('cursor-not-allowed');
+                    camposEndereco.classList.add('hidden');
+                    inputCartao.disabled = false;
+                    rotuloCartao.classList.remove('opacity-50', 'cursor-not-allowed');
+                    opcaoCartao.classList.add('cursor-pointer');
+                    opcaoCartao.classList.remove('cursor-not-allowed');
                     tooltip.classList.add('hidden');
                 }
             }
 
-            function sendOrderToWhatsApp() {
-                if (state.cart.length === 0) return;
+            function enviarPedidoWhatsApp() {
+                if (estado.carrinho.length === 0) return;
 
-                const nameField = document.getElementById('cust-name');
-                const name = nameField.value.trim();
+                const campoNome = document.getElementById('cust-name');
+                const nomeCliente = campoNome.value.trim();
                 
-                // VALIDATION: Name Required
-                if (!name) {
+                if (!nomeCliente) {
                     alert("Por favor, informe seu nome.");
-                    nameField.focus();
-                    nameField.classList.add('border-red-500');
+                    campoNome.focus();
+                    campoNome.classList.add('border-red-500');
                     return;
                 } else {
-                    nameField.classList.remove('border-red-500');
+                    campoNome.classList.remove('border-red-500');
                 }
 
-                const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-                const deliveryMethod = document.getElementById('cust-delivery').value;
-                let addressText = "";
+                const metodoPagamento = document.querySelector('input[name="payment"]:checked').value;
+                const metodoEntrega = document.getElementById('cust-delivery').value;
+                let textoEndereco = "";
 
-                // VALIDATION: Address Required for Delivery
-                if (deliveryMethod === 'Entrega') {
-                    const street = document.getElementById('addr-street').value.trim();
-                    const number = document.getElementById('addr-number').value.trim();
-                    const hood = document.getElementById('addr-hood').value.trim();
-                    const comp = document.getElementById('addr-comp').value.trim();
+                if (metodoEntrega === 'Entrega') {
+                    const rua = document.getElementById('addr-street').value.trim();
+                    const numero = document.getElementById('addr-number').value.trim();
+                    const bairro = document.getElementById('addr-hood').value.trim();
+                    const complemento = document.getElementById('addr-comp').value.trim();
 
-                    if (!street || !number || !hood) {
+                    if (!rua || !numero || !bairro) {
                         alert("Por favor, preencha o endereço completo (Rua, Número e Bairro).");
                         return;
                     }
-                    addressText = `\n📍 *Endereço de Entrega:*\n${street}, ${number} - ${hood}\n${comp ? `(${comp})` : ''}`;
+                    textoEndereco = `\n📍 *Endereço de Entrega:*\n${rua}, ${numero} - ${bairro}\n${complemento ? `(${complemento})` : ''}`;
                 }
 
-                let message = `*NOVO PEDIDO - OUTLESCKY* 🧢\n`;
-                message += `--------------------------------\n`;
-                message += `👤 *Cliente:* ${name}\n`;
-                message += `💳 *Pagamento:* ${paymentMethod}\n`;
-                message += `📦 *Entrega:* ${deliveryMethod}\n`;
-                if (addressText) message += addressText + "\n";
-                message += `--------------------------------\n\n`;
-                message += `*ITENS DO PEDIDO:*\n`;
+                let mensagem = `*NOVO PEDIDO - OUTLESCKY* 🧢\n`;
+                mensagem += `--------------------------------\n`;
+                mensagem += `👤 *Cliente:* ${nomeCliente}\n`;
+                mensagem += `💳 *Pagamento:* ${metodoPagamento}\n`;
+                mensagem += `📦 *Entrega:* ${metodoEntrega}\n`;
+                if (textoEndereco) mensagem += textoEndereco + "\n";
+                mensagem += `--------------------------------\n\n`;
+                mensagem += `*ITENS DO PEDIDO:*\n`;
 
                 let total = 0;
-                state.cart.forEach((item, index) => {
+                estado.carrinho.forEach((item, index) => {
                     total += item.price;
-                    message += `\n🛒 *ITEM ${index + 1}*\n`;
-                    message += `▪️ ${item.name}\n`;
-                    message += `▪️ Tamanho: ${item.size}\n`;
-                    message += `▪️ Preço: R$ ${item.price.toFixed(2)}\n`;
-                    message += `📸 Ver: ${item.image}\n`; 
+                    mensagem += `\n🛒 *ITEM ${index + 1}*\n`;
+                    mensagem += `▪️ ${item.name}\n`;
+                    mensagem += `▪️ Tamanho: ${item.size}\n`;
+                    mensagem += `▪️ Preço: R$ ${item.price.toFixed(2)}\n`;
+                    mensagem += `📸 Ver: ${item.image}\n`; 
                 });
 
-                message += `\n--------------------------------\n`;
-                message += `💰 *TOTAL FINAL: R$ ${total.toFixed(2)}*\n`;
-                message += `--------------------------------\n`;
+                mensagem += `\n--------------------------------\n`;
+                mensagem += `💰 *TOTAL FINAL: R$ ${total.toFixed(2)}*\n`;
+                mensagem += `--------------------------------\n`;
                 
-                if(deliveryMethod === 'Retirada') {
-                    message += `\n📍 *Obs:* Irei retirar na loja.`;
+                if(metodoEntrega === 'Retirada') {
+                    mensagem += `\n📍 *Obs:* Irei retirar na loja.`;
                 }
 
-                const encodedMessage = encodeURIComponent(message);
-                const phoneNumber = "557199726951"; 
+                const mensagemCodificada = encodeURIComponent(mensagem);
+                const numeroWhatsApp = "5571988118197"; 
                 
-                window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+                window.open(`https://wa.me/${numeroWhatsApp}?text=${mensagemCodificada}`, '_blank');
                 
-                // Clear Cart after success (Optional - uncomment if desired)
-                // state.cart = [];
-                // localStorage.setItem('outlescky_cart', '[]');
-                // updateCartCount();
-                
-                toggleCheckout(false);
+                alternarCheckout(false);
             }
 
-            // Mobile Nav
-            function toggleMobileFilters() {
+            function alternarFiltrosMobile() {
                 const sidebar = document.getElementById('mobile-filter-sidebar');
                 const overlay = document.getElementById('filter-overlay');
-                const panel = document.getElementById('filter-panel');
+                const painel = document.getElementById('filter-panel');
                 if (sidebar.classList.contains('hidden')) {
                     sidebar.classList.remove('hidden');
                     document.body.classList.add('overflow-hidden');
-                    setTimeout(() => { overlay.classList.remove('opacity-0'); panel.classList.remove('-translate-x-full'); }, 10);
+                    setTimeout(() => { overlay.classList.remove('opacity-0'); painel.classList.remove('-translate-x-full'); }, 10);
                 } else {
                     overlay.classList.add('opacity-0');
-                    panel.classList.add('-translate-x-full');
+                    painel.classList.add('-translate-x-full');
                     document.body.classList.remove('overflow-hidden');
                     setTimeout(() => { sidebar.classList.add('hidden'); }, 300);
                 }
             }
 
-            function transitionTo(event, url) {
-                event.preventDefault();
+            function transicaoPara(evento, url) {
+                evento.preventDefault();
                 const loader = document.getElementById('page-loader');
                 document.body.classList.add('overflow-hidden');
                 loader.classList.remove('opacity-0', 'pointer-events-none');
                 setTimeout(() => { window.location.href = url; }, 500);
             }
-            window.transitionTo = transitionTo;
+            window.transicaoPara = transicaoPara;
 
             lucide.createIcons();
         </script>
 
-        <!-- CSS -->
         <style>
             body { font-family: 'Inter', sans-serif; }
             .bg-noise { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"); }
